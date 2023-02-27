@@ -37,15 +37,15 @@ extern int yydebug;
 LETTRE          [A-Za-z]
 /* A completer ; fausses definitions pour passer la compilation */
 CHIFFRE         [0-9]
-IDF             {LETTRE}{LETTRE | CHIFFRE | _ }*
+IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 CHIFFRE_NON_NUL [1-9]
-ENTIER_DEC      0 | CHIFFRE_NON_NUL CHIFFRE*
+ENTIER_DEC      0|({CHIFFRE_NON_NUL}{CHIFFRE}*)
 LETTRE_HEXA     [a-fA-F]
-ENTIER_HEXA     0x {CHIFFRE | LETTRE_HEXA}+
-ENTIER          ENTIER_DEC | ENTIER_HEXA
+ENTIER_HEXA     0x({CHIFFRE}|{LETTRE_HEXA})+
+ENTIER          {ENTIER_DEC}|{ENTIER_HEXA}
 CHAINE_CAR      [\x20-\x21\x23-\x5B\x5D-\x7E]
-CHAINE          \" {CHAINE_CAR | \" | \n }* \"
-COMMENTAIRE     // {CHAINE} \n
+CHAINE          \"({CHAINE_CAR}|\\\"|\\n|\x5C)*\"
+COMMENTAIRE     "//"{CHAINE_CAR}*
 /*SEPARATEUR      {\x20 | \t | \n }*/
 
 
@@ -97,13 +97,15 @@ COMMENTAIRE     // {CHAINE} \n
                 #endif
                 RETURN(TOK_IDENT);
 }
+
 {ENTIER} {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.intval et faire des verifications */
-                yylval.intval = yytext;
+                yylval.intval = (int)yytext;
                 #endif
                 RETURN(TOK_INTVAL);
 }
+
 {CHAINE} {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.strval */
@@ -111,6 +113,7 @@ COMMENTAIRE     // {CHAINE} \n
                 #endif
                 RETURN(TOK_STRING);
 }
+
 {COMMENTAIRE} {
 }
 

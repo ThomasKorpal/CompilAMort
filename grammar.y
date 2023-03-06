@@ -103,7 +103,7 @@ listdecl:
 listdeclnonnull:
         vardecl
         { 
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
+            $$ = $1;
         }
         | listdeclnonnull vardecl
         { 
@@ -176,7 +176,7 @@ listinst:
 listinstnonnull:
         inst
         {
-            $$ = make_node(NODE_LIST, 2, NULL, $1);
+            $$ = $1;
         }
         | listinstnonnull inst
         {
@@ -184,6 +184,7 @@ listinstnonnull:
         }
         ;
 
+//---------------------ICI------------------------
 inst:
         expr TOK_SEMICOL
         {
@@ -226,7 +227,7 @@ inst:
 block:
         TOK_LACC listdecl listinst TOK_RACC
         {
-            $$ = NULL;
+            $$ = make_node(NODE_BLOCK, 2, $2, $3);
         }
         ;
 

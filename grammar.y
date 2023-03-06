@@ -27,7 +27,8 @@ extern int yylineno;
 
 void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
-node_t make_node(node_nature nature, int nops, ...);
+node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2);
+node_t make_node_type(node_nature nature, node_type type);
 /* A completer */
 
 %}
@@ -91,8 +92,7 @@ program:
 listdecl:
         listdeclnonnull
         {
-            
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, NULL);
         }
         |
         {
@@ -103,67 +103,71 @@ listdecl:
 listdeclnonnull:
         vardecl
         { 
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, NULL);
         }
         | listdeclnonnull vardecl
         { 
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, $2);
         }
         ;
 
 vardecl:
-        type listdeclnonnull TOK_SEMICOL
+        type listtypedecl TOK_SEMICOL
         {
-            $$ = NULL;
+            $$ = make_node(NODE_DECLS, 2, $1, $2);
         }
         ;
 
 type:
         TOK_INT
         {
-            $$ = NULL;
+            $$ = make_node_type(NODE_TYPE, TYPE_INT);
         }
         | TOK_BOOL
         {
-            $$ = NULL;
+            $$ = make_node_type(NODE_TYPE, TYPE_BOOL);
         }
         | TOK_VOID
         {
-            $$ = NULL;
+            $$ = make_node_type(NODE_TYPE, TYPE_VOID);
         }
         ;
 
 listtypedecl:
         decl
         { 
-            $$ = NULL;
+            $$ = $1;
         }
         | listtypedecl TOK_COMMA decl
         { 
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, $3);
         }
         ;
 
 decl:
         ident
         { 
-            $$ = NULL;
+            $$ = make_node(NODE_DECL, 2, $1, NULL);
         }
         | ident TOK_AFFECT expr
         { 
-            $$ = NULL;
+            $$ = make_node(NODE_DECL, 2, $1, $3);
         }
         ;
 
 maindecl:
         type ident TOK_LPAR TOK_RPAR block
         {
-            $$ = NULL;
+            $$ = make_node_main(NODE_FUNC, 3, $1, $2, $5);
         }
         ;
 
 listinst:
         listinstnonnull
+        {
+            $$ = $1;
+        }
+        |
         {
             $$ = NULL;
         }
@@ -172,18 +176,18 @@ listinst:
 listinstnonnull:
         inst
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, NULL, $1);
         }
         | listinstnonnull inst
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, $2);
         }
         ;
 
 inst:
         expr TOK_SEMICOL
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, NULL, $1);
         }
         | TOK_IF TOK_LPAR expr TOK_RPAR inst TOK_ELSE inst
         {
@@ -360,12 +364,53 @@ ident:
 %%
 
 /* A completer et/ou remplacer avec d'autres fonctions */
-node_t make_node(node_nature nature, int nops, ...) {
+node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2) {
     va_list ap;
-
-    return NULL;
+    node_t new_node = malloc(sizeof(node_t));
+    new_node->nature = nature;
+    new_node->nops=nops;
+    new_node->opr=malloc(nops*sizeof(node_t));
+    if(nops > 0)
+    {
+        new_node->opr[0]=enf1;
+        if(nops > 1)
+        {
+            new_node->opr[1]=enf2;
+        }
+    }
+    return new_node;
 }
 
+node_t make_node_type(node_nature nature, node_type type)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));
+    new_node->nature=nature;
+    new_node->type=type;
+    return new_node;
+}
+
+node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));
+    new_node->nature=nature;
+    new_node->nops=nops;
+    new_node->opr=malloc(nops*sizeof(node_t));
+    if(nops > 0)
+    {
+        new_node->opr[0]=enf1;
+        if(nops > 1)
+        {
+            new_node->opr[1]=enf2;
+            if(nops > 2)
+            {
+                new_node->opr[2]=enf3;
+            }
+        }
+    }
+    return new_node;
+}
 
 void analyse_tree(node_t root) {
     //dump_tree(root, "apres_syntaxe.dot");

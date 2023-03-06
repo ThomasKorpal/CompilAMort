@@ -44,7 +44,7 @@ LETTRE_HEXA     [a-fA-F]
 ENTIER_HEXA     0x({CHIFFRE}|{LETTRE_HEXA})+
 ENTIER          {ENTIER_DEC}|{ENTIER_HEXA}
 CHAINE_CAR      [\x20-\x21\x23-\x5B\x5D-\x7E]
-CHAINE          \"({CHAINE_CAR}|\\\"|\\n|\x5C)*\"
+CHAINE          \"({CHAINE_CAR}|\\\"|\\n)*\"
 COMMENTAIRE     "//"{CHAINE_CAR}*
 /*SEPARATEUR      {\x20 | \t | \n }*/
 

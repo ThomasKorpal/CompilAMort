@@ -97,7 +97,7 @@ extern int yylineno;
 
 void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
-node_t make_node(node_nature nature, int nops, ...);
+node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2);
 /* A completer */
 
 
@@ -2007,10 +2007,15 @@ yyreturnlab:
 
 
 /* A completer et/ou remplacer avec d'autres fonctions */
-node_t make_node(node_nature nature, int nops, ...) {
+node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2) {
     va_list ap;
-
-    return NULL;
+    node_t new_node = malloc(sizeof(node_t));
+    new_node->nature = nature;
+    new_node->nops=nops;
+    new_node->opr=malloc(2*sizeof(node_t));
+    new_node->opr[0]=enf1;
+    new_node->opr[1]=enf2;
+    return new_node;
 }
 
 

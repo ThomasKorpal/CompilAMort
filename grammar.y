@@ -19,6 +19,7 @@
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 extern char * outfile;
+int32_t nbNode = 1;
 
 
 /* prototypes */
@@ -27,8 +28,12 @@ extern int yylineno;
 
 void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
+
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2);
 node_t make_node_type(node_nature nature, node_type type);
+node_t make_node_ident(node_nature nature, char* ident);
+node_t make_node_string(node_nature nature, char* str);
+node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3);
 /* A completer */
 
 %}
@@ -337,39 +342,42 @@ expr:
 listparamprint:
         listparamprint TOK_COMMA paramprint
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LIST, 2, $1, $3);
         }
         | paramprint
         {
-            $$ = NULL;
+            $$ = $1;
         }
         ;        
 
 paramprint:
         ident
         {
-            $$ = NULL;    
+            $$ = $1;    
         }
         | TOK_STRING
         {
-            $$ = NULL;
+            $$ = make_node_string(NODE_STRINGVAL, $1);
         }
         ;
 
 ident:
         TOK_IDENT
         {
-            $$ = NULL;
+            $$ = make_node_ident(NODE_IDENT, $1);
         }
         ;
 %%
 
 /* A completer et/ou remplacer avec d'autres fonctions */
-node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2) {
+node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
+{
     va_list ap;
-    node_t new_node = malloc(sizeof(node_t));
+    node_t new_node = malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
     new_node->nature = nature;
     new_node->nops=nops;
+    new_node->node_num=nbNode++;
+    new_node->type=TYPE_NONE;                                  //Type ?????????????????
     new_node->opr=malloc(nops*sizeof(node_t));
     if(nops > 0)
     {
@@ -385,18 +393,43 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2) {
 node_t make_node_type(node_nature nature, node_type type)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_t));
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
     new_node->nature=nature;
     new_node->type=type;
+    new_node->node_num=nbNode++;
+    return new_node;
+}
+
+node_t make_node_ident(node_nature nature, char* ident)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    new_node->nature=nature;
+    new_node->ident=ident;
+    new_node->type=TYPE_NONE;                                  //Type ?????????????????
+    new_node->node_num=nbNode++;
+    return new_node;
+}
+
+node_t make_node_string(node_nature nature, char* str)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    new_node->nature=nature;
+    new_node->str=str;
+    new_node->type=TYPE_NONE;                                  //Type ?????????????????
+    new_node->node_num=nbNode++;
     return new_node;
 }
 
 node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_t));
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
     new_node->nature=nature;
     new_node->nops=nops;
+    new_node->node_num=nbNode++;
+    new_node->type=TYPE_NONE;                                  //Type ?????????????????
     new_node->opr=malloc(nops*sizeof(node_t));
     if(nops > 0)
     {

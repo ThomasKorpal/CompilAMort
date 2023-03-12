@@ -50,7 +50,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 
 
 %%
-
+// TOKEN THEN MANQUANT
 "void"          RETURN(TOK_VOID);
 "int"           RETURN(TOK_INT);
 "bool"          RETURN(TOK_BOOL);
@@ -63,7 +63,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 "do"            RETURN(TOK_DO);
 "print"         RETURN(TOK_PRINT);
 "+"             RETURN(TOK_PLUS);
-"-"             RETURN(TOK_MINUS);/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+"-"             RETURN(TOK_MINUS);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 "*"             RETURN(TOK_MUL);
 "/"             RETURN(TOK_DIV);
 "%"             RETURN(TOK_MOD);

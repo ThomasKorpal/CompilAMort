@@ -914,7 +914,7 @@ RETURN(TOK_PLUS);
 case 13:
 YY_RULE_SETUP
 #line 66 "lexico.l"
-RETURN(TOK_MINUS);/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+RETURN(TOK_MINUS); /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 	YY_BREAK
 case 14:
 YY_RULE_SETUP

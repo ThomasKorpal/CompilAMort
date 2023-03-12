@@ -50,7 +50,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 
 
 %%
-/* Token THEN manquant */
+
 "void"          RETURN(TOK_VOID);
 "int"           RETURN(TOK_INT);
 "bool"          RETURN(TOK_BOOL);

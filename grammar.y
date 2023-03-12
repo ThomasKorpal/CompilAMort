@@ -34,6 +34,7 @@ node_t make_node_type(node_nature nature, node_type type);
 node_t make_node_ident(node_nature nature, char* ident);
 node_t make_node_string(node_nature nature, char* str);
 node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3);
+node_t make_node_bool_int(node_nature nature, int64_t val);
 /* A completer */
 
 %}
@@ -323,15 +324,15 @@ expr:
         }
         | TOK_INTVAL
         {
-            $$ = NULL;
+            $$ = make_node_bool_int(NODE_BOOLVAL, $1);
         }
         | TOK_TRUE
         {
-            $$ = NULL;
+            $$ = make_node_bool_int(NODE_BOOLVAL, 1);
         }
         | TOK_FALSE
         {
-            $$ = NULL;
+            $$ = make_node_bool_int(NODE_BOOLVAL, 0);
         }
         | ident
         {
@@ -377,7 +378,6 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     new_node->nature = nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
-    new_node->type=TYPE_NONE;                                  //Type ?????????????????
     new_node->opr=malloc(nops*sizeof(node_t));
     if(nops > 0)
     {
@@ -406,7 +406,6 @@ node_t make_node_ident(node_nature nature, char* ident)
     node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
     new_node->nature=nature;
     new_node->ident=ident;
-    new_node->type=TYPE_NONE;                                  //Type ?????????????????
     new_node->node_num=nbNode++;
     return new_node;
 }
@@ -417,7 +416,16 @@ node_t make_node_string(node_nature nature, char* str)
     node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
     new_node->nature=nature;
     new_node->str=str;
-    new_node->type=TYPE_NONE;                                  //Type ?????????????????
+    new_node->node_num=nbNode++;
+    return new_node;
+}
+
+node_t make_node_bool_int(node_nature nature, int64_t val)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    new_node->nature=nature;
+    new_node->value=val;
     new_node->node_num=nbNode++;
     return new_node;
 }

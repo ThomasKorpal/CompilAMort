@@ -30,10 +30,11 @@ void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
 
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2);
+node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3);
+node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3, node_t enf4);
 node_t make_node_type(node_nature nature, node_type type);
 node_t make_node_ident(node_nature nature, char* ident);
 node_t make_node_string(node_nature nature, char* str);
-node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3);
 node_t make_node_bool_int(node_nature nature, int64_t val);
 /* A completer */
 
@@ -164,7 +165,7 @@ decl:
 maindecl:
         type ident TOK_LPAR TOK_RPAR block
         {
-            $$ = make_node_main(NODE_FUNC, 3, $1, $2, $5);
+            $$ = make_node_main_if(NODE_FUNC, 3, $1, $2, $5);
         }
         ;
 
@@ -190,43 +191,42 @@ listinstnonnull:
         }
         ;
 
-//---------------------ICI------------------------
 inst:
         expr TOK_SEMICOL
         {
-            $$ = make_node(NODE_LIST, 2, NULL, $1);
+            $$ = $1;
         }
         | TOK_IF TOK_LPAR expr TOK_RPAR inst TOK_ELSE inst
         {
-            $$ = NULL;
+            $$ = make_node_main_if(NODE_IF, 3, $3, $5, $7);
         }
         | TOK_IF TOK_LPAR expr TOK_RPAR inst %prec TOK_THEN
         {
-            $$ = NULL;
+            $$ = make_node_main_if(NODE_IF, 2, $3, $5, NULL);                //?????????????????????????????????????????????
         }
         | TOK_WHILE TOK_LPAR expr TOK_RPAR inst
         {
-            $$ = NULL;
+            $$ = make_node(NODE_WHILE, 2, $3, $5);
         }
         | TOK_FOR TOK_LPAR expr TOK_SEMICOL expr TOK_SEMICOL expr TOK_RPAR inst
         {
-            $$ = NULL;
+            $$ = make_node_for(NODE_FOR, 4, $3, $5, $7, $9);
         }
         | TOK_DO inst TOK_WHILE TOK_LPAR expr TOK_RPAR TOK_SEMICOL
         {
-            $$ = NULL;
+            $$ = make_node(NODE_DOWHILE, 2, $2, $5);
         }
         | block
         {
-            $$ = NULL;
+            $$ = $1;
         }
         | TOK_SEMICOL
         {
-            $$ = NULL;
+            $$ = NULL;                                                        //????????????????????????????????????????????????
         }
         | TOK_PRINT TOK_LPAR listparamprint TOK_RPAR TOK_SEMICOL
         {
-            $$ = NULL;
+            $$ = make_node(NODE_PRINT, 1, $3, NULL);
         }
         ;
 
@@ -240,87 +240,87 @@ block:
 expr:
         expr TOK_MUL expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_MUL, 2, $1, $3);
         }
         | expr TOK_DIV expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_DIV, 2, $1, $3);
         }
         | expr TOK_PLUS expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_PLUS, 2, $1, $3);
         }
         | expr TOK_MINUS expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_MINUS, 2, $1, $3);
         }
         | expr TOK_MOD expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_MOD, 2, $1, $3);
         }
         | expr TOK_LT expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LT, 2, $1, $3);
         }
         | expr TOK_GT expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_GT, 2, $1, $3);
         }
         | TOK_MINUS expr %prec TOK_UMINUS
         {
-            $$ = NULL;
+            $$ = NULL;                                                  //????????????????????????????????????????????????
         }
         | expr TOK_GE expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_GE, 2, $1, $3);
         }
         | expr TOK_LE expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_LE, 2, $1, $3);
         }
         | expr TOK_OR expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_OR, 2, $1, $3);
         }
         | expr TOK_BAND expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_BAND, 2, $1, $3);
         }
         | expr TOK_BOR expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_BOR, 2, $1, $3);
         }
         | expr TOK_BXOR expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_BXOR, 2, $1, $3);
         }
         | expr TOK_SRL expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_SRL, 2, $1, $3);
         }
         | expr TOK_SRA expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_SRA, 2, $1, $3);
         }
         | expr TOK_SLL expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_SLL, 2, $1, $3);
         }
         | TOK_NOT expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_NOT, 1, $2, NULL);
         }
         | TOK_BNOT expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_BNOT, 1, $2, NULL);
         }
         | TOK_LPAR expr TOK_RPAR
         {
-            $$ = NULL;
+            $$ = $2;                                                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
         | ident TOK_AFFECT expr
         {
-            $$ = NULL;
+            $$ = make_node(NODE_AFFECT, 2, $1, $3);
         }
         | TOK_INTVAL
         {
@@ -379,14 +379,43 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     new_node->nops=nops;
     new_node->node_num=nbNode++;
     new_node->opr=malloc(nops*sizeof(node_t));
-    if(nops > 0)
+    new_node->opr[0]=enf1;
+    if(nops > 1)
     {
-        new_node->opr[0]=enf1;
-        if(nops > 1)
-        {
-            new_node->opr[1]=enf2;
-        }
+        new_node->opr[1]=enf2;
     }
+    return new_node;
+}
+
+node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    new_node->nature=nature;
+    new_node->nops=nops;
+    new_node->node_num=nbNode++;
+    new_node->opr=malloc(nops*sizeof(node_t));
+    new_node->opr[0]=enf1;
+    new_node->opr[1]=enf2;
+    if(nops > 2)
+    {
+        new_node->opr[2]=enf3;
+    }
+    return new_node;
+}
+
+node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3, node_t enf4)
+{
+    va_list ap;
+    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    new_node->nature=nature;
+    new_node->nops=nops;
+    new_node->node_num=nbNode++;
+    new_node->opr=malloc(nops*sizeof(node_t));
+    new_node->opr[0]=enf1;
+    new_node->opr[1]=enf2;
+    new_node->opr[2]=enf3;
+    new_node->opr[3]=enf4;
     return new_node;
 }
 
@@ -427,30 +456,6 @@ node_t make_node_bool_int(node_nature nature, int64_t val)
     new_node->nature=nature;
     new_node->value=val;
     new_node->node_num=nbNode++;
-    return new_node;
-}
-
-node_t make_node_main(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
-{
-    va_list ap;
-    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
-    new_node->nature=nature;
-    new_node->nops=nops;
-    new_node->node_num=nbNode++;
-    new_node->type=TYPE_NONE;                                  //Type ?????????????????
-    new_node->opr=malloc(nops*sizeof(node_t));
-    if(nops > 0)
-    {
-        new_node->opr[0]=enf1;
-        if(nops > 1)
-        {
-            new_node->opr[1]=enf2;
-            if(nops > 2)
-            {
-                new_node->opr[2]=enf3;
-            }
-        }
-    }
     return new_node;
 }
 

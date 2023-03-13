@@ -13,13 +13,113 @@
 #include "common.h"
 #include "arch.h"
 
-
 extern char * infile;
 extern char * outfile;
 int32_t trace_level = DEFAULT_TRACE_LEVEL;
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
+extern int flagb;
 
+void fctUsage()
+{
+    printf("Usage : ./minicc [OPTIONS]\n\n");
+    printf("Liste des OPTIONS :\n");
+    printf("\t-b : \t\taffiche la banniere du projet, indiquant le nom du compilateur et leurs créateurs\n");
+    printf("\t-o <filename> : definit le nom de fichier assembleur produit (defaut : out.s)\n");
+    printf("\t-t <int> : \tdefinit le niveau de trace a utiliser entre 0 et 5 (0 = pas de trace, 5 = toutes les traces, defaut : 0)\n");
+    printf("\t-r <int> : \tdefinit le nombre maximal de registre a utiliser entre 4 et 8 (defaut : 8)\n");
+    printf("\t-s : \t\tarrete la compilation apres l'analyse syntaxique (defaut : non)\n");
+    printf("\t-v : \t\tarrete la compilation apres la passe de vérification (defaut : non)\n");
+    printf("\t-h : \t\taffiche la liste des options\n\n");
+}
+
+void analyseArgs(int argc, char ** argv)
+{
+    if(argc > 1) //si on passe des arguments
+    {
+        if(!strcmp(argv[1],"-b"))
+        {
+            printf("\n*****************************************************************************************\n");
+            printf("*****************************************************************************************\n");
+            printf("*****                               Compilateur minicc                              *****\n");
+            printf("*****                                 version KiMarch                               *****\n");
+            printf("*****                                                                               *****\n");
+            printf("*****                                                                               *****\n");
+            printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
+            printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
+            printf("*****************************************************************************************\n");
+            printf("*****************************************************************************************\n");
+            printf("\nPS: Une bonne note svp ? :)\n");
+            flagb = 1;
+        }
+        else if(!strcmp(argv[1],"-h"))
+        {
+            fctUsage();
+            flagb = 1;
+        }
+        else
+        {
+            for(int i = 1; i < argc; i++)
+            {
+                if(!strcmp(argv[i],"-o"))
+                {
+                    outfile = argv[i+1];
+                    printf("%s",argv[i+1]);
+                    i = i + 2;
+                }
+                else if(!strcmp(argv[i],"-t"))
+                {
+                    trace_level = atoi(argv[i+1]);
+                    printf("%d",trace_level);
+                    i = i + 2;
+                }
+                else if(!strcmp(argv[i],"-r"))
+                {
+                    set_max_registers(atoi(argv[i+1]));
+                    i = i + 2;
+                }
+                else if(!strcmp(argv[i],"-s"))
+                {
+                    if(!stop_after_verif)
+                    {
+                        stop_after_syntax = true;
+                    }
+                    else
+                    {
+                        //erreur
+                        printf("Options -s and -v are incompatible");
+                        flagb = 1;
+                        break;
+                    }
+                }
+                else if(!strcmp(argv[i],"-v"))
+                {
+                    if(!stop_after_syntax)
+                    {
+                        stop_after_verif = true;
+                    }
+                    else
+                    {
+                        //erreur
+                        printf("Options -s and -v are incompatible");
+                        flagb = 1;
+                        break;
+                    }
+                }
+                else
+                {
+                    infile = argv[i];
+                }
+            }
+        }
+    }
+    else //si on a pas d'arguments
+    {
+        printf("Aucun argument passe a ./minicc [OPTIONS]\n\n");
+        fctUsage();
+        flagb = 1;
+    }
+}
 
 void parse_args(int argc, char ** argv) {
     // A implementer (la ligne suivante est a changer)

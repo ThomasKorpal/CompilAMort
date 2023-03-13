@@ -544,7 +544,7 @@ char *yytext;
 int yyparse(node_t * program_root);
 void analyse_tree(node_t root);
 
-
+int flagb = 0;
 char * infile = NULL;
 char * outfile = DEFAULT_OUTFILE;
 bool stop_after_syntax = false;
@@ -1073,7 +1073,10 @@ YY_RULE_SETUP
                 }
                 else
                 {
-                    yylval.intval = atoi(yytext);
+                    if(atoi(yytext)<4294967296)
+                    {
+                        yylval.intval = atoi(yytext);
+                    }
                 }
                 #endif
                 RETURN(TOK_INTVAL);
@@ -1081,7 +1084,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 121 "lexico.l"
+#line 124 "lexico.l"
 {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.strval */
@@ -1092,19 +1095,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 129 "lexico.l"
+#line 132 "lexico.l"
 {
 }
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 132 "lexico.l"
+#line 135 "lexico.l"
 
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 134 "lexico.l"
+#line 137 "lexico.l"
 {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
                 exit(1);
@@ -1112,10 +1115,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 140 "lexico.l"
+#line 143 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1119 "lex.yy.c"
+#line 1122 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2132,37 +2135,17 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 140 "lexico.l"
+#line 143 "lexico.l"
 
 
 int yywrap(void) {
     return 1;
 }
 
-
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv) { 
     node_t program_root;
     parse_args(argc, argv);
-    int flagb = 0;
-    /*for(int i = 0; i<argc; i++)
-    {
-        printf("%d %s\n",i,argv[i]);
-    }*/
-    if(!strcmp(argv[1],"-b"))
-    {
-            printf("\n*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("*****                               Compilateur Minicc                              *****\n");
-            printf("*****                                 version KiMarch                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
-            printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
-            printf("*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("\nPS: Une bonne note svp ? :)\n");
-            flagb = 1;
-    }
+    analyseArgs(argc, argv);
     if(!flagb)
     {
         yyin = fopen(infile, "r");

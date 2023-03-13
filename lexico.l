@@ -12,7 +12,7 @@
 int yyparse(node_t * program_root);
 void analyse_tree(node_t root);
 
-
+int flagb = 0;
 char * infile = NULL;
 char * outfile = DEFAULT_OUTFILE;
 bool stop_after_syntax = false;
@@ -112,7 +112,10 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                 }
                 else
                 {
-                    yylval.intval = atoi(yytext);
+                    if(atoi(yytext)<4294967296)
+                    {
+                        yylval.intval = atoi(yytext);
+                    }
                 }
                 #endif
                 RETURN(TOK_INTVAL);
@@ -143,30 +146,10 @@ int yywrap(void) {
     return 1;
 }
 
-
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv) { 
     node_t program_root;
     parse_args(argc, argv);
-    int flagb = 0;
-    /*for(int i = 0; i<argc; i++)
-    {
-        printf("%d %s\n",i,argv[i]);
-    }*/
-    if(!strcmp(argv[1],"-b"))
-    {
-            printf("\n*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("*****                               Compilateur Minicc                              *****\n");
-            printf("*****                                 version KiMarch                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
-            printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
-            printf("*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("\nPS: Une bonne note svp ? :)\n");
-            flagb = 1;
-    }
+    analyseArgs(argc, argv);
     if(!flagb)
     {
         yyin = fopen(infile, "r");

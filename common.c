@@ -35,50 +35,114 @@ void fctUsage()
 
 void analyseArgs(int argc, char ** argv)
 {
+    parse_args(argc, argv);
+    int i = 1;
+    char* fichierEntree = "";
+    /*printf("%d\n",argc);
+    for(int j = 0; j < argc; j++)
+    {   
+        printf("%d %s\n",j,argv[j]);
+    }*/
     if(argc > 1) //si on passe des arguments
     {
-        if(!strcmp(argv[1],"-b"))
+        if(argc == 2)
         {
-            printf("\n*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("*****                               Compilateur minicc                              *****\n");
-            printf("*****                                 version KiMarch                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                                                                               *****\n");
-            printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
-            printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
-            printf("*****************************************************************************************\n");
-            printf("*****************************************************************************************\n");
-            printf("\nPS: Une bonne note svp ? :)\n");
-            flagb = 1;
-        }
-        else if(!strcmp(argv[1],"-h"))
-        {
-            fctUsage();
-            flagb = 1;
+            if(!strcmp(argv[1],"-b"))
+            {
+                printf("\n*****************************************************************************************\n");
+                printf("*****************************************************************************************\n");
+                printf("*****                               Compilateur minicc                              *****\n");
+                printf("*****                                 version KiMarch                               *****\n");
+                printf("*****                                                                               *****\n");
+                printf("*****                                                                               *****\n");
+                printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
+                printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
+                printf("*****************************************************************************************\n");
+                printf("*****************************************************************************************\n");
+                printf("\nPS: Une bonne note svp ? :)\n");
+                flagb = 1;
+            }
+            else if(!strcmp(argv[1],"-h"))
+            {
+                fctUsage();
+                flagb = 1;
+            }
+            else
+            {
+                fichierEntree = argv[1];
+                // Poser question fichiers inexistant ou autre argument rentré
+            }
         }
         else
         {
-            for(int i = 1; i < argc; i++)
+            while(i < argc)
             {
                 if(!strcmp(argv[i],"-o"))
                 {
-                    outfile = argv[i+1];
+                    if(i+1 < argc)
+                    {
+                        outfile = argv[i+1];
+                    }
+                    else
+                    {
+                        printf("Option -o needs an argument\n");
+                        flagb = 1;
+                        break;
+                    }
                     printf("%s",argv[i+1]);
-                    i = i + 2;
+                    i += 2;
+                    continue;
                 }
-                else if(!strcmp(argv[i],"-t"))
+                if(!strcmp(argv[i],"-t"))
                 {
-                    trace_level = atoi(argv[i+1]);
+                    if(i+1 < argc)
+                    {
+                        if(atoi(argv[i+1]) >= 0 && atoi(argv[i+1]) <= 5)
+                        {
+                            trace_level = atoi(argv[i+1]);
+                        }
+                        else
+                        {
+                            printf("Argument given for -t out of range\n");
+                            flagb = 1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        printf("Option -t needs an argument\n");
+                        flagb = 1;
+                        break;
+                    }
                     printf("%d",trace_level);
-                    i = i + 2;
+                    i+=2;
+                    continue;
                 }
-                else if(!strcmp(argv[i],"-r"))
+                if(!strcmp(argv[i],"-r"))
                 {
-                    set_max_registers(atoi(argv[i+1]));
-                    i = i + 2;
+                    if(i+1 < argc)
+                    {
+                        if(atoi(argv[i+1]) >= 4 && atoi(argv[i+1]) <= 8)
+                        {
+                            set_max_registers(atoi(argv[i+1]));
+                        }
+                        else
+                        {
+                            printf("Argument given for -r out of range\n");
+                            flagb = 1;
+                            break;
+                        }   
+                    }
+                    else
+                    {
+                        printf("Option -r needs an argument\n");
+                        flagb = 1;
+                        break;
+                    }
+                    i+=2;
+                    continue;
                 }
-                else if(!strcmp(argv[i],"-s"))
+                if(!strcmp(argv[i],"-s"))
                 {
                     if(!stop_after_verif)
                     {
@@ -87,12 +151,14 @@ void analyseArgs(int argc, char ** argv)
                     else
                     {
                         //erreur
-                        printf("Options -s and -v are incompatible");
+                        printf("Options -s and -v are incompatible\n");
                         flagb = 1;
                         break;
                     }
+                    i++;
+                    continue;
                 }
-                else if(!strcmp(argv[i],"-v"))
+                if(!strcmp(argv[i],"-v"))
                 {
                     if(!stop_after_syntax)
                     {
@@ -101,14 +167,31 @@ void analyseArgs(int argc, char ** argv)
                     else
                     {
                         //erreur
-                        printf("Options -s and -v are incompatible");
+                        printf("Options -s and -v are incompatible\n");
                         flagb = 1;
                         break;
                     }
+                    i++;
+                    continue;
+                }
+                if(!strcmp(argv[i],"-b"))
+                {
+                    printf("Option -b can't be activated when more than 1 argument given\n");
+                    flagb = 1;
+                    break;
+                }
+                if(!strcmp(argv[i],"-h"))
+                {
+                    printf("Option -h can't be activated when more than 1 argument given\n");
+                    flagb = 1;
+                    break;
                 }
                 else
                 {
-                    infile = argv[i];
+                    fichierEntree = argv[i];
+                    // Poser question fichiers inexistant ou autre argument rentré
+                    i++;
+                    continue;
                 }
             }
         }
@@ -119,6 +202,7 @@ void analyseArgs(int argc, char ** argv)
         fctUsage();
         flagb = 1;
     }
+    infile = fichierEntree;
 }
 
 void parse_args(int argc, char ** argv) {

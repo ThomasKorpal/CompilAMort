@@ -1064,12 +1064,13 @@ YY_RULE_SETUP
                 /* A completer : affecter yylval.intval et faire des verifications */
                 if(strlen(yytext)>=3)
                 {
-                    char* ent_hex, ptr;
+                    /*char* ent_hex, ptr;
                     sscanf(yytext,"0x%s",ent_hex);
                     if(ent_hex >=0)
                     {
-                        yylval.intval = (int)strtol(yytext,NULL,0);
-                    }
+                        
+                    }*/
+                    yylval.intval = (int)strtol(yytext,NULL,0);
                 }
                 else
                 {
@@ -1084,7 +1085,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 124 "lexico.l"
+#line 125 "lexico.l"
 {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.strval */
@@ -1095,19 +1096,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 132 "lexico.l"
+#line 133 "lexico.l"
 {
 }
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 135 "lexico.l"
+#line 136 "lexico.l"
 
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 137 "lexico.l"
+#line 138 "lexico.l"
 {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
                 exit(1);
@@ -1115,10 +1116,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 143 "lexico.l"
+#line 144 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1122 "lex.yy.c"
+#line 1123 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2135,7 +2136,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 143 "lexico.l"
+#line 144 "lexico.l"
 
 
 int yywrap(void) {
@@ -2144,7 +2145,6 @@ int yywrap(void) {
 
 int main(int argc, char ** argv) { 
     node_t program_root;
-    parse_args(argc, argv);
     analyseArgs(argc, argv);
     if(!flagb)
     {

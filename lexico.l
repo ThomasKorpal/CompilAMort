@@ -103,12 +103,13 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                 /* A completer : affecter yylval.intval et faire des verifications */
                 if(strlen(yytext)>=3)
                 {
-                    char* ent_hex, ptr;
+                    /*char* ent_hex, ptr;
                     sscanf(yytext,"0x%s",ent_hex);
                     if(ent_hex >=0)
                     {
-                        yylval.intval = (int)strtol(yytext,NULL,0);
-                    }
+                        
+                    }*/
+                    yylval.intval = (int)strtol(yytext,NULL,0);
                 }
                 else
                 {
@@ -148,10 +149,10 @@ int yywrap(void) {
 
 int main(int argc, char ** argv) { 
     node_t program_root;
-    parse_args(argc, argv);
     analyseArgs(argc, argv);
     if(!flagb)
     {
+        // Poser question fichiers inexistant ou autre argument rentré
         yyin = fopen(infile, "r");
     #if LEX_DEBUG
         while(yylex());

@@ -99,7 +99,7 @@ program:
 listdecl:
         listdeclnonnull
         {
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
+            $$ = $1;
         }
         |
         {
@@ -268,7 +268,7 @@ expr:
         }
         | TOK_MINUS expr %prec TOK_UMINUS
         {
-            $$ = NULL;                                                  //????????????????????????????????????????????????
+            $$ = make_node(NODE_UMINUS, 1, $2, NULL);
         }
         | expr TOK_GE expr
         {
@@ -324,7 +324,7 @@ expr:
         }
         | TOK_INTVAL
         {
-            $$ = make_node_bool_int(NODE_BOOLVAL, $1);
+            $$ = make_node_bool_int(NODE_INTVAL, $1);
         }
         | TOK_TRUE
         {
@@ -374,7 +374,7 @@ ident:
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 {
     va_list ap;
-    node_t new_node = malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    node_t new_node = malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
     new_node->nature = nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -390,7 +390,7 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_t));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -407,7 +407,7 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
 node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3, node_t enf4)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -422,7 +422,7 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
 node_t make_node_type(node_nature nature, node_type type)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->type=type;
     new_node->node_num=nbNode++;
@@ -432,7 +432,7 @@ node_t make_node_type(node_nature nature, node_type type)
 node_t make_node_ident(node_nature nature, char* ident)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->ident=ident;
     new_node->node_num=nbNode++;
@@ -442,7 +442,7 @@ node_t make_node_ident(node_nature nature, char* ident)
 node_t make_node_string(node_nature nature, char* str)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->str=str;
     new_node->node_num=nbNode++;
@@ -452,26 +452,29 @@ node_t make_node_string(node_nature nature, char* str)
 node_t make_node_bool_int(node_nature nature, int64_t val)
 {
     va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->value=val;
     new_node->node_num=nbNode++;
     return new_node;
 }
 
-void analyse_tree(node_t root) {
-    //dump_tree(root, "apres_syntaxe.dot");
-    if (!stop_after_syntax) {
+void analyse_tree(node_t root)
+{
+    dump_tree(root, "apres_syntaxe.dot");
+    /*if (!stop_after_syntax) 
+    {
         analyse_passe_1(root);
         //dump_tree(root, "apres_passe_1.dot");
-        if (!stop_after_verif) {
+        if (!stop_after_verif) 
+        {
             create_program(); 
             gen_code_passe_2(root);
             dump_mips_program(outfile);
             free_program();
         }
         free_global_strings();
-    }
+    }*/
     free_nodes(root);
 }
 

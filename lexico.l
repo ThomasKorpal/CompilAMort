@@ -101,7 +101,19 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 {ENTIER} {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.intval et faire des verifications */
-                yylval.intval = (int)yytext;
+                if(strlen(yytext)>=3)
+                {
+                    char* ent_hex, ptr;
+                    sscanf(yytext,"0x%s",ent_hex);
+                    if(ent_hex >=0)
+                    {
+                        yylval.intval = (int)strtol(yytext,NULL,0);
+                    }
+                }
+                else
+                {
+                    yylval.intval = atoi(yytext);
+                }
                 #endif
                 RETURN(TOK_INTVAL);
 }
@@ -116,7 +128,6 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 
 {COMMENTAIRE} {
 }
-
 
 [ \t\n]+
 
@@ -136,7 +147,29 @@ int yywrap(void) {
 int main(int argc, char ** argv) {
     node_t program_root;
     parse_args(argc, argv);
-    yyin = fopen(infile, "r");
+    int flagb = 0;
+    /*for(int i = 0; i<argc; i++)
+    {
+        printf("%d %s\n",i,argv[i]);
+    }*/
+    if(!strcmp(argv[1],"-b"))
+    {
+            printf("\n*****************************************************************************************\n");
+            printf("*****************************************************************************************\n");
+            printf("*****                               Compilateur Minicc                              *****\n");
+            printf("*****                                 version KiMarch                               *****\n");
+            printf("*****                                                                               *****\n");
+            printf("*****                                                                               *****\n");
+            printf("*****                         par Thomas Korpal & Hugo Vouaux                       *****\n");
+            printf("*****                            EISE 4 - Polytech Sorbonne                         *****\n");
+            printf("*****************************************************************************************\n");
+            printf("*****************************************************************************************\n");
+            printf("\nPS: Une bonne note svp ? :)\n");
+            flagb = 1;
+    }
+    if(!flagb)
+    {
+        yyin = fopen(infile, "r");
     #if LEX_DEBUG
         while(yylex());
         fclose(yyin);
@@ -148,7 +181,8 @@ int main(int argc, char ** argv) {
         fclose(yyin);
         analyse_tree(program_root);
     #endif
-    yylex_destroy();
+        yylex_destroy();
+    }
     return 0;
 }
 

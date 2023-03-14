@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "defs.h"
 #include "common.h"
@@ -101,21 +102,29 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 {ENTIER} {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.intval et faire des verifications */
-                if(strlen(yytext)>=3)
+                if(strlen(yytext)>=3 && yytext[1]=='x')
                 {
-                    /*char* ent_hex, ptr;
-                    sscanf(yytext,"0x%s",ent_hex);
-                    if(ent_hex >=0)
+                    if(strlen(yytext)>10)
                     {
-                        
-                    }*/
-                    yylval.intval = (int)strtol(yytext,NULL,0);
+                        printf("int out of 32 bits range\n");
+                    }
+                    else
+                    {
+                        yylval.intval = (int)strtol(yytext,NULL,0);
+                    }
                 }
                 else
                 {
-                    if(atoi(yytext)<4294967296)
+                    if(atoi(yytext)<2147483648)
                     {
                         yylval.intval = atoi(yytext);
+                    }
+                    else
+                    {
+                        printf("int out of 32 bits range\n");
+                        yylval.intval = 0xFFFFFFFF;
+                        flagb=1;
+                        //comment rendre erreur bloquante
                     }
                 }
                 #endif
@@ -153,19 +162,36 @@ int main(int argc, char ** argv) {
     if(!flagb)
     {
         // Poser question fichiers inexistant ou autre argument rentré
-        yyin = fopen(infile, "r");
-    #if LEX_DEBUG
-        while(yylex());
-        fclose(yyin);
-    #else
-        #if YYDEBUG
-        yydebug = 1;
+        if(!access(infile,F_OK))
+        {
+            yyin = fopen(infile, "r");
+        #if LEX_DEBUG
+            while(yylex());
+            fclose(yyin);
+        #else
+            #if YYDEBUG
+            yydebug = 1;
+            #endif
+            yyparse(&program_root);
+            //printf("Coucou 0\n");
+            if(!stop_after_syntax)
+            {
+                //printf("Coucou 1\n");
+                analyse_tree(program_root);
+                if(!stop_after_verif)
+                {
+                    //reste du code
+                    //printf("Coucou 2\n");
+                }
+            }
+            fclose(yyin);
         #endif
-        yyparse(&program_root);
-        fclose(yyin);
-        analyse_tree(program_root);
-    #endif
-        yylex_destroy();
+            yylex_destroy();
+        }
+        else
+        {
+            printf("File given is inexistant\n");
+        }
     }
     return 0;
 }

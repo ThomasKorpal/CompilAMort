@@ -23,19 +23,19 @@ extern int flagb;
 void fctUsage()
 {
     printf("Usage : ./minicc [OPTIONS]\n\n");
-    printf("Liste des OPTIONS :\n");
-    printf("\t-b : \t\taffiche la banniere du projet, indiquant le nom du compilateur et leurs créateurs\n");
-    printf("\t-o <filename> : definit le nom de fichier assembleur produit (defaut : out.s)\n");
-    printf("\t-t <int> : \tdefinit le niveau de trace a utiliser entre 0 et 5 (0 = pas de trace, 5 = toutes les traces, defaut : 0)\n");
-    printf("\t-r <int> : \tdefinit le nombre maximal de registre a utiliser entre 4 et 8 (defaut : 8)\n");
-    printf("\t-s : \t\tarrete la compilation apres l'analyse syntaxique (defaut : non)\n");
-    printf("\t-v : \t\tarrete la compilation apres la passe de vérification (defaut : non)\n");
-    printf("\t-h : \t\taffiche la liste des options\n\n");
+    printf("Options list :\n");
+    printf("\t<filename.c> : \t\tdefines the .c file to compile\n");
+    printf("\t-b : \t\t\tprints the project banner on the terminal, including the compiler's name, version and authors' names\n");
+    printf("\t-o <filename.s> : \tdefines the outfile's name (default : out.s)\n");
+    printf("\t-t <int> : \t\tdefines the trace level used by the compiler (between 0 and 5) (0 = no trace printed, 5 = all traces printed, default : 0)\n");
+    printf("\t-r <int> : \t\tdefines the maximum number of registers used in the assembly code (between 4 and 8) (default : 8)\n");
+    printf("\t-s : \t\t\tstops compilation after syntax verification (default : no)\n");
+    printf("\t-v : \t\t\tstops compilation after verification phase (default : no)\n");
+    printf("\t-h : \t\t\tprints the options list\n\n");
 }
 
 void analyseArgs(int argc, char ** argv)
 {
-    parse_args(argc, argv);
     int i = 1;
     char* fichierEntree = "";
     /*printf("%d\n",argc);
@@ -69,8 +69,24 @@ void analyseArgs(int argc, char ** argv)
             }
             else
             {
-                fichierEntree = argv[1];
-                // Poser question fichiers inexistant ou autre argument rentré
+                if(strlen(argv[1])>2)
+                {
+                    if(argv[1][strlen(argv[1])-1]=='c' && argv[1][strlen(argv[1])-2]=='.')
+                    {
+                        fichierEntree = argv[1];
+                    }
+                    else
+                    {
+                        printf("File given isn't a C file\n");
+                        flagb = 1;
+                    }
+                }
+                else
+                {
+                    printf("Argument given is not a file\n");
+                    fctUsage();
+                    flagb = 1;
+                }
             }
         }
         else
@@ -81,7 +97,26 @@ void analyseArgs(int argc, char ** argv)
                 {
                     if(i+1 < argc)
                     {
-                        outfile = argv[i+1];
+                        if(strlen(argv[i+1]) > 2)
+                        {
+                            if(argv[i+1][strlen(argv[i+1])-1]=='s' && argv[i+1][strlen(argv[i+1])-2]=='.')
+                            {
+                                outfile = argv[i+1];
+                            }
+                            else
+                            {
+                                printf("File given isn't a .s file\n");
+                                flagb = 1;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            printf("Argument given is not a file\n");
+                            fctUsage();
+                            flagb = 1;
+                            break;
+                        }
                     }
                     else
                     {
@@ -89,7 +124,6 @@ void analyseArgs(int argc, char ** argv)
                         flagb = 1;
                         break;
                     }
-                    printf("%s",argv[i+1]);
                     i += 2;
                     continue;
                 }
@@ -103,7 +137,7 @@ void analyseArgs(int argc, char ** argv)
                         }
                         else
                         {
-                            printf("Argument given for -t out of range\n");
+                            printf("Argument given for -t out of range (between 0 and 5 included)\n");
                             flagb = 1;
                             break;
                         }
@@ -114,7 +148,6 @@ void analyseArgs(int argc, char ** argv)
                         flagb = 1;
                         break;
                     }
-                    printf("%d",trace_level);
                     i+=2;
                     continue;
                 }
@@ -128,7 +161,7 @@ void analyseArgs(int argc, char ** argv)
                         }
                         else
                         {
-                            printf("Argument given for -r out of range\n");
+                            printf("Argument given for -r out of range (between 4 and 8 included)\n");
                             flagb = 1;
                             break;
                         }   
@@ -188,10 +221,30 @@ void analyseArgs(int argc, char ** argv)
                 }
                 else
                 {
-                    fichierEntree = argv[i];
-                    // Poser question fichiers inexistant ou autre argument rentré
-                    i++;
-                    continue;
+                    if(strlen(argv[i])>2)
+                    {
+                        if(argv[i][strlen(argv[i])-1]=='c' && argv[i][strlen(argv[i])-2]=='.')
+                        {
+                            fichierEntree = argv[i];
+                        }
+                        else
+                        {
+                            printf("File given isn't a C file\n");
+                            fctUsage();
+                            flagb = 1;
+                            break;
+                        }
+                        // Poser question fichiers inexistant ou autre argument rentré
+                        i++;
+                        continue;
+                    }
+                    else
+                    {
+                        printf("Argument given is not a file\n");
+                        fctUsage();
+                        flagb = 1;
+                        break;
+                    }
                 }
             }
         }
@@ -204,13 +257,6 @@ void analyseArgs(int argc, char ** argv)
     }
     infile = fichierEntree;
 }
-
-void parse_args(int argc, char ** argv) {
-    // A implementer (la ligne suivante est a changer)
-    infile = argv[1];
-}
-
-
 
 void free_nodes(node_t n) {
     // A implementer

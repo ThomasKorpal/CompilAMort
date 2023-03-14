@@ -56,48 +56,48 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     TOK_VOID = 258,                /* TOK_VOID  */
     TOK_INT = 259,                 /* TOK_INT  */
-    TOK_INTVAL = 260,              /* TOK_INTVAL  */
-    TOK_BOOL = 261,                /* TOK_BOOL  */
-    TOK_TRUE = 262,                /* TOK_TRUE  */
-    TOK_FALSE = 263,               /* TOK_FALSE  */
-    TOK_IDENT = 264,               /* TOK_IDENT  */
-    TOK_IF = 265,                  /* TOK_IF  */
-    TOK_ELSE = 266,                /* TOK_ELSE  */
-    TOK_WHILE = 267,               /* TOK_WHILE  */
-    TOK_FOR = 268,                 /* TOK_FOR  */
-    TOK_PRINT = 269,               /* TOK_PRINT  */
-    TOK_SEMICOL = 270,             /* TOK_SEMICOL  */
-    TOK_COMMA = 271,               /* TOK_COMMA  */
-    TOK_LPAR = 272,                /* TOK_LPAR  */
-    TOK_RPAR = 273,                /* TOK_RPAR  */
-    TOK_LACC = 274,                /* TOK_LACC  */
-    TOK_RACC = 275,                /* TOK_RACC  */
-    TOK_STRING = 276,              /* TOK_STRING  */
-    TOK_DO = 277,                  /* TOK_DO  */
-    TOK_THEN = 278,                /* TOK_THEN  */
-    TOK_AFFECT = 279,              /* TOK_AFFECT  */
-    TOK_OR = 280,                  /* TOK_OR  */
-    TOK_AND = 281,                 /* TOK_AND  */
-    TOK_BOR = 282,                 /* TOK_BOR  */
-    TOK_BXOR = 283,                /* TOK_BXOR  */
-    TOK_BAND = 284,                /* TOK_BAND  */
-    TOK_EQ = 285,                  /* TOK_EQ  */
-    TOK_NE = 286,                  /* TOK_NE  */
-    TOK_GT = 287,                  /* TOK_GT  */
-    TOK_LT = 288,                  /* TOK_LT  */
-    TOK_GE = 289,                  /* TOK_GE  */
-    TOK_LE = 290,                  /* TOK_LE  */
-    TOK_SRL = 291,                 /* TOK_SRL  */
-    TOK_SRA = 292,                 /* TOK_SRA  */
-    TOK_SLL = 293,                 /* TOK_SLL  */
-    TOK_PLUS = 294,                /* TOK_PLUS  */
-    TOK_MINUS = 295,               /* TOK_MINUS  */
-    TOK_MUL = 296,                 /* TOK_MUL  */
-    TOK_DIV = 297,                 /* TOK_DIV  */
-    TOK_MOD = 298,                 /* TOK_MOD  */
-    TOK_UMINUS = 299,              /* TOK_UMINUS  */
-    TOK_NOT = 300,                 /* TOK_NOT  */
-    TOK_BNOT = 301                 /* TOK_BNOT  */
+    TOK_BOOL = 260,                /* TOK_BOOL  */
+    TOK_TRUE = 261,                /* TOK_TRUE  */
+    TOK_FALSE = 262,               /* TOK_FALSE  */
+    TOK_IF = 263,                  /* TOK_IF  */
+    TOK_ELSE = 264,                /* TOK_ELSE  */
+    TOK_WHILE = 265,               /* TOK_WHILE  */
+    TOK_FOR = 266,                 /* TOK_FOR  */
+    TOK_PRINT = 267,               /* TOK_PRINT  */
+    TOK_SEMICOL = 268,             /* TOK_SEMICOL  */
+    TOK_COMMA = 269,               /* TOK_COMMA  */
+    TOK_LPAR = 270,                /* TOK_LPAR  */
+    TOK_RPAR = 271,                /* TOK_RPAR  */
+    TOK_LACC = 272,                /* TOK_LACC  */
+    TOK_RACC = 273,                /* TOK_RACC  */
+    TOK_DO = 274,                  /* TOK_DO  */
+    TOK_THEN = 275,                /* TOK_THEN  */
+    TOK_AFFECT = 276,              /* TOK_AFFECT  */
+    TOK_OR = 277,                  /* TOK_OR  */
+    TOK_AND = 278,                 /* TOK_AND  */
+    TOK_BOR = 279,                 /* TOK_BOR  */
+    TOK_BXOR = 280,                /* TOK_BXOR  */
+    TOK_BAND = 281,                /* TOK_BAND  */
+    TOK_EQ = 282,                  /* TOK_EQ  */
+    TOK_NE = 283,                  /* TOK_NE  */
+    TOK_GT = 284,                  /* TOK_GT  */
+    TOK_LT = 285,                  /* TOK_LT  */
+    TOK_GE = 286,                  /* TOK_GE  */
+    TOK_LE = 287,                  /* TOK_LE  */
+    TOK_SRL = 288,                 /* TOK_SRL  */
+    TOK_SRA = 289,                 /* TOK_SRA  */
+    TOK_SLL = 290,                 /* TOK_SLL  */
+    TOK_PLUS = 291,                /* TOK_PLUS  */
+    TOK_MINUS = 292,               /* TOK_MINUS  */
+    TOK_MUL = 293,                 /* TOK_MUL  */
+    TOK_DIV = 294,                 /* TOK_DIV  */
+    TOK_MOD = 295,                 /* TOK_MOD  */
+    TOK_UMINUS = 296,              /* TOK_UMINUS  */
+    TOK_NOT = 297,                 /* TOK_NOT  */
+    TOK_BNOT = 298,                /* TOK_BNOT  */
+    TOK_INTVAL = 299,              /* TOK_INTVAL  */
+    TOK_IDENT = 300,               /* TOK_IDENT  */
+    TOK_STRING = 301               /* TOK_STRING  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -108,48 +108,48 @@ extern int yydebug;
 #define YYUNDEF 257
 #define TOK_VOID 258
 #define TOK_INT 259
-#define TOK_INTVAL 260
-#define TOK_BOOL 261
-#define TOK_TRUE 262
-#define TOK_FALSE 263
-#define TOK_IDENT 264
-#define TOK_IF 265
-#define TOK_ELSE 266
-#define TOK_WHILE 267
-#define TOK_FOR 268
-#define TOK_PRINT 269
-#define TOK_SEMICOL 270
-#define TOK_COMMA 271
-#define TOK_LPAR 272
-#define TOK_RPAR 273
-#define TOK_LACC 274
-#define TOK_RACC 275
-#define TOK_STRING 276
-#define TOK_DO 277
-#define TOK_THEN 278
-#define TOK_AFFECT 279
-#define TOK_OR 280
-#define TOK_AND 281
-#define TOK_BOR 282
-#define TOK_BXOR 283
-#define TOK_BAND 284
-#define TOK_EQ 285
-#define TOK_NE 286
-#define TOK_GT 287
-#define TOK_LT 288
-#define TOK_GE 289
-#define TOK_LE 290
-#define TOK_SRL 291
-#define TOK_SRA 292
-#define TOK_SLL 293
-#define TOK_PLUS 294
-#define TOK_MINUS 295
-#define TOK_MUL 296
-#define TOK_DIV 297
-#define TOK_MOD 298
-#define TOK_UMINUS 299
-#define TOK_NOT 300
-#define TOK_BNOT 301
+#define TOK_BOOL 260
+#define TOK_TRUE 261
+#define TOK_FALSE 262
+#define TOK_IF 263
+#define TOK_ELSE 264
+#define TOK_WHILE 265
+#define TOK_FOR 266
+#define TOK_PRINT 267
+#define TOK_SEMICOL 268
+#define TOK_COMMA 269
+#define TOK_LPAR 270
+#define TOK_RPAR 271
+#define TOK_LACC 272
+#define TOK_RACC 273
+#define TOK_DO 274
+#define TOK_THEN 275
+#define TOK_AFFECT 276
+#define TOK_OR 277
+#define TOK_AND 278
+#define TOK_BOR 279
+#define TOK_BXOR 280
+#define TOK_BAND 281
+#define TOK_EQ 282
+#define TOK_NE 283
+#define TOK_GT 284
+#define TOK_LT 285
+#define TOK_GE 286
+#define TOK_LE 287
+#define TOK_SRL 288
+#define TOK_SRA 289
+#define TOK_SLL 290
+#define TOK_PLUS 291
+#define TOK_MINUS 292
+#define TOK_MUL 293
+#define TOK_DIV 294
+#define TOK_MOD 295
+#define TOK_UMINUS 296
+#define TOK_NOT 297
+#define TOK_BNOT 298
+#define TOK_INTVAL 299
+#define TOK_IDENT 300
+#define TOK_STRING 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

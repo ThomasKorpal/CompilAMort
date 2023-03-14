@@ -50,10 +50,10 @@ node_t make_node_bool_int(node_nature nature, int64_t val);
 
 
 /* Definir les token ici avec leur associativite, dans le bon ordre */
-%token TOK_VOID TOK_INT TOK_INTVAL TOK_BOOL TOK_TRUE TOK_FALSE 
-%token TOK_IDENT TOK_IF TOK_ELSE TOK_WHILE TOK_FOR TOK_PRINT
+%token TOK_VOID TOK_INT TOK_BOOL TOK_TRUE TOK_FALSE 
+%token TOK_IF TOK_ELSE TOK_WHILE TOK_FOR TOK_PRINT
 %token TOK_SEMICOL TOK_COMMA TOK_LPAR TOK_RPAR TOK_LACC TOK_RACC
-%token TOK_STRING TOK_DO
+%token TOK_DO
 /* A completer */
 
 %nonassoc TOK_THEN
@@ -75,8 +75,8 @@ node_t make_node_bool_int(node_nature nature, int64_t val);
 
 %nonassoc TOK_UMINUS TOK_NOT TOK_BNOT
 
-%type <intval> TOK_INTVAL;
-%type <strval> TOK_IDENT TOK_STRING;
+%token <intval> TOK_INTVAL;
+%token <strval> TOK_IDENT TOK_STRING;
 
 %type <ptr> program listdecl listdeclnonnull vardecl ident type listtypedecl decl maindecl listinst listinstnonnull inst block expr listparamprint paramprint
 
@@ -278,6 +278,18 @@ expr:
         {
             $$ = make_node(NODE_LE, 2, $1, $3);
         }
+        | expr TOK_EQ expr
+        {
+            $$ = make_node(NODE_EQ, 2, $1, $3);
+        }
+        | expr TOK_NE expr
+        {
+            $$ = make_node(NODE_NE, 2, $1, $3);
+        }
+        | expr TOK_AND expr
+        {
+            $$ = make_node(NODE_AND, 2, $1, $3);
+        }
         | expr TOK_OR expr
         {
             $$ = make_node(NODE_OR, 2, $1, $3);
@@ -378,6 +390,7 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     new_node->nature = nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
+    new_node->lineno=yylineno;
     new_node->opr=malloc(nops*sizeof(node_t));
     new_node->opr[0]=enf1;
     if(nops > 1)
@@ -394,6 +407,7 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
+    new_node->lineno=yylineno;
     new_node->opr=malloc(nops*sizeof(node_t));
     new_node->opr[0]=enf1;
     new_node->opr[1]=enf2;
@@ -411,6 +425,7 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
+    new_node->lineno=yylineno;
     new_node->opr=malloc(nops*sizeof(node_t));
     new_node->opr[0]=enf1;
     new_node->opr[1]=enf2;
@@ -425,6 +440,7 @@ node_t make_node_type(node_nature nature, node_type type)
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->type=type;
+    new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
 }
@@ -435,6 +451,7 @@ node_t make_node_ident(node_nature nature, char* ident)
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->ident=ident;
+    new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
 }
@@ -445,6 +462,7 @@ node_t make_node_string(node_nature nature, char* str)
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->str=str;
+    new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
 }
@@ -455,6 +473,7 @@ node_t make_node_bool_int(node_nature nature, int64_t val)
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->value=val;
+    new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
 }

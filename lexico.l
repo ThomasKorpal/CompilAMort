@@ -7,6 +7,8 @@
 
 #include "defs.h"
 #include "common.h"
+#include "passe_1.h"
+#include "passe_2.h"
 
 #include "y.tab.h"
 
@@ -107,6 +109,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                     if(strlen(yytext)>10)
                     {
                         printf("int out of 32 bits range\n");
+                        exit(EXIT_FAILURE);
                     }
                     else
                     {
@@ -123,7 +126,8 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                     {
                         printf("int out of 32 bits range\n");
                         yylval.intval = 0xFFFFFFFF;
-                        flagb=1;
+                        //flagb=1;
+                        exit(EXIT_FAILURE);
                         //comment rendre erreur bloquante
                     }
                 }
@@ -173,15 +177,17 @@ int main(int argc, char ** argv) {
             yydebug = 1;
             #endif
             yyparse(&program_root);
-            //printf("Coucou 0\n");
+            printf("Coucou 0\n");
             if(!stop_after_syntax)
             {
-                //printf("Coucou 1\n");
+                printf("Coucou 1\n");
                 analyse_tree(program_root);
                 if(!stop_after_verif)
                 {
                     //reste du code
-                    //printf("Coucou 2\n");
+                    printf("Coucou 2\n");
+                    analyse_passe_1(program_root);
+                    gen_code_passe_2(program_root);
                 }
             }
             fclose(yyin);
@@ -191,6 +197,7 @@ int main(int argc, char ** argv) {
         else
         {
             printf("File given is inexistant\n");
+            exit(EXIT_FAILURE);
         }
     }
     return 0;

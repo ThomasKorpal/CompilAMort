@@ -453,6 +453,7 @@ node_t make_node_ident(node_nature nature, char* ident)
     new_node->ident=ident;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
+    new_node->offset = -1;
     return new_node;
 }
 

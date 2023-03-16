@@ -65,7 +65,8 @@ void analyseArgs(int argc, char ** argv)
             else if(!strcmp(argv[1],"-h"))
             {
                 fctUsage();
-                flagb = 1;
+                //flagb = 1;
+                exit(EXIT_FAILURE);
             }
             else
             {
@@ -78,14 +79,16 @@ void analyseArgs(int argc, char ** argv)
                     else
                     {
                         printf("File given isn't a C file\n");
-                        flagb = 1;
+                        //flagb = 1;
+                        exit(EXIT_FAILURE);
                     }
                 }
                 else
                 {
                     printf("Argument given is not a file\n");
                     fctUsage();
-                    flagb = 1;
+                    //flagb = 1;
+                    exit(EXIT_FAILURE);
                 }
             }
         }
@@ -106,23 +109,26 @@ void analyseArgs(int argc, char ** argv)
                             else
                             {
                                 printf("File given isn't a .s file\n");
-                                flagb = 1;
-                                break;
+                                //flagb = 1;
+                                //break;
+                                exit(EXIT_FAILURE);
                             }
                         }
                         else
                         {
                             printf("Argument given is not a file\n");
                             fctUsage();
-                            flagb = 1;
-                            break;
+                            //flagb = 1;
+                            //break;
+                            exit(EXIT_FAILURE);
                         }
                     }
                     else
                     {
                         printf("Option -o needs an argument\n");
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                     i += 2;
                     continue;
@@ -138,15 +144,17 @@ void analyseArgs(int argc, char ** argv)
                         else
                         {
                             printf("Argument given for -t out of range (between 0 and 5 included)\n");
-                            flagb = 1;
-                            break;
+                            //flagb = 1;
+                            //break;
+                            exit(EXIT_FAILURE);
                         }
                     }
                     else
                     {
                         printf("Option -t needs an argument\n");
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                     i+=2;
                     continue;
@@ -162,15 +170,17 @@ void analyseArgs(int argc, char ** argv)
                         else
                         {
                             printf("Argument given for -r out of range (between 4 and 8 included)\n");
-                            flagb = 1;
-                            break;
+                            //flagb = 1;
+                            //break;
+                            exit(EXIT_FAILURE);
                         }   
                     }
                     else
                     {
                         printf("Option -r needs an argument\n");
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                     i+=2;
                     continue;
@@ -185,8 +195,9 @@ void analyseArgs(int argc, char ** argv)
                     {
                         //erreur
                         printf("Options -s and -v are incompatible\n");
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                     i++;
                     continue;
@@ -201,8 +212,9 @@ void analyseArgs(int argc, char ** argv)
                     {
                         //erreur
                         printf("Options -s and -v are incompatible\n");
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                     i++;
                     continue;
@@ -210,14 +222,16 @@ void analyseArgs(int argc, char ** argv)
                 if(!strcmp(argv[i],"-b"))
                 {
                     printf("Option -b can't be activated when more than 1 argument given\n");
-                    flagb = 1;
-                    break;
+                    //flagb = 1;
+                    //break;
+                    exit(EXIT_FAILURE);
                 }
                 if(!strcmp(argv[i],"-h"))
                 {
                     printf("Option -h can't be activated when more than 1 argument given\n");
-                    flagb = 1;
-                    break;
+                    //flagb = 1;
+                    //break;
+                    exit(EXIT_FAILURE);
                 }
                 else
                 {
@@ -231,8 +245,9 @@ void analyseArgs(int argc, char ** argv)
                         {
                             printf("File given isn't a C file\n");
                             fctUsage();
-                            flagb = 1;
-                            break;
+                            //flagb = 1;
+                            //break;
+                            exit(EXIT_FAILURE);
                         }
                         // Poser question fichiers inexistant ou autre argument rentré
                         i++;
@@ -242,8 +257,9 @@ void analyseArgs(int argc, char ** argv)
                     {
                         printf("Argument given is not a file\n");
                         fctUsage();
-                        flagb = 1;
-                        break;
+                        //flagb = 1;
+                        //break;
+                        exit(EXIT_FAILURE);
                     }
                 }
             }
@@ -253,7 +269,8 @@ void analyseArgs(int argc, char ** argv)
     {
         printf("Aucun argument passe a ./minicc [OPTIONS]\n\n");
         fctUsage();
-        flagb = 1;
+        //flagb = 1;
+        exit(EXIT_FAILURE);
     }
     infile = fichierEntree;
 }

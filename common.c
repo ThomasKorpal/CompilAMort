@@ -36,7 +36,7 @@ void fctUsage()
 
 void analyseArgs(int argc, char ** argv)
 {
-    int i = 1;
+    int i = 1, cpt = 1;
     char* fichierEntree = "";
     /*printf("%d\n",argc);
     for(int j = 0; j < argc; j++)
@@ -237,21 +237,31 @@ void analyseArgs(int argc, char ** argv)
                 {
                     if(strlen(argv[i])>2)
                     {
-                        if(argv[i][strlen(argv[i])-1]=='c' && argv[i][strlen(argv[i])-2]=='.')
+                        if(cpt == 1)
                         {
-                            fichierEntree = argv[i];
+                            if(argv[i][strlen(argv[i])-1]=='c' && argv[i][strlen(argv[i])-2]=='.')
+                            {
+                                fichierEntree = argv[i];
+                                cpt++;
+                            }
+                            else
+                            {
+                                printf("File given isn't a C file\n");
+                                fctUsage();
+                                //flagb = 1;
+                                //break;
+                                exit(EXIT_FAILURE);
+                            }
+                            // Poser question fichiers inexistant ou autre argument rentré
+                            i++;
+                            continue;
                         }
                         else
                         {
-                            printf("File given isn't a C file\n");
+                            printf("Only one .c file is required\n");
                             fctUsage();
-                            //flagb = 1;
-                            //break;
                             exit(EXIT_FAILURE);
                         }
-                        // Poser question fichiers inexistant ou autre argument rentré
-                        i++;
-                        continue;
                     }
                     else
                     {

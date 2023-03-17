@@ -9,10 +9,10 @@ extern int trace_level;
 
 void analyse_passe_1(node_t root)
 {
-    parcours_arbre_offset_ident(root,trace_level);
+    //parcours_arbre_offset_ident(root,trace_level);
 }
 
-void parcours_arbre_offset_ident(node_t root, int trace_level)
+/*void parcours_arbre_offset_ident(node_t root, int trace_level)
 {
     //En gros on fait un DFS ou on va reperer tous les noeuds NODE_IDENT
     //On met a jour les offset des NODE_IDENT fils d'un NODE_DECLS 
@@ -42,7 +42,7 @@ void parcours_arbre_offset_ident(node_t root, int trace_level)
     }
 }node_t* DFS_OFFSET_IDENT(node_t root, int trace_level)
 {
-    /*DFS qui va compter le nombre de NODE_IDENT de l'arbre et retourner un tableau des noeuds
-    On initialisera les offset dans cette fonction*/
-}
+    //DFS qui va compter le nombre de NODE_IDENT de l'arbre et retourner un tableau des noeuds
+    //On initialisera les offset dans cette fonction
+}*/
 

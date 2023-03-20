@@ -94,6 +94,14 @@ void analyseArgs(int argc, char ** argv)
         }
         else
         {
+            for(int i = 1; i > argc; i++)
+            {
+                if(!strcmp(argv[i],"-h"))
+                {
+                    fctUsage();
+                    exit(EXIT_SUCCESS);
+                }
+            }
             while(i < argc)
             {
                 if(!strcmp(argv[i],"-o"))
@@ -226,20 +234,13 @@ void analyseArgs(int argc, char ** argv)
                     //break;
                     exit(EXIT_FAILURE);
                 }
-                if(!strcmp(argv[i],"-h"))
-                {
-                    printf("Option -h can't be activated when more than 1 argument given\n");
-                    //flagb = 1;
-                    //break;
-                    exit(EXIT_FAILURE);
-                }
                 else
                 {
                     if(strlen(argv[i])>2)
                     {
                         if(cpt == 1)
                         {
-                            if(argv[i][strlen(argv[i])-1]=='c' && argv[i][strlen(argv[i])-2]=='.')
+                            if(argv[i][strlen(argv[i])-1] == 'c' && argv[i][strlen(argv[i])-2] == '.')
                             {
                                 fichierEntree = argv[i];
                                 cpt++;
@@ -265,11 +266,13 @@ void analyseArgs(int argc, char ** argv)
                     }
                     else
                     {
-                        printf("Argument given is not a file\n");
+                        if(strcmp(argv[i],"-h"))
+                        {
+                            printf("Argument given is not a file\n");
+                            exit(EXIT_FAILURE);
+                        }
                         fctUsage();
-                        //flagb = 1;
-                        //break;
-                        exit(EXIT_FAILURE);
+                        exit(EXIT_SUCCESS);
                     }
                 }
             }

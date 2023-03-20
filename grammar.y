@@ -13,16 +13,11 @@
 #include "passe_1.h"
 #include "passe_2.h"
 
-
-
-/* Global variables */
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 extern char * outfile;
 int32_t nbNode = 1;
 
-
-/* prototypes */
 int yylex(void);
 extern int yylineno;
 
@@ -385,8 +380,7 @@ ident:
 /* A completer et/ou remplacer avec d'autres fonctions */
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 {
-    va_list ap;
-    node_t new_node = malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node = malloc(sizeof(node_s));
     new_node->nature = nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -402,8 +396,7 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 
 node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
 {
-    va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -420,7 +413,6 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
 
 node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3, node_t enf4)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->nops=nops;
@@ -436,8 +428,8 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
 
 node_t make_node_type(node_nature nature, node_type type)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->type=type;
     new_node->lineno=yylineno;
@@ -447,8 +439,8 @@ node_t make_node_type(node_nature nature, node_type type)
 
 node_t make_node_ident(node_nature nature, char* ident)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->ident=ident;
     new_node->lineno=yylineno;
@@ -459,8 +451,8 @@ node_t make_node_ident(node_nature nature, char* ident)
 
 node_t make_node_string(node_nature nature, char* str)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->str=str;
     new_node->lineno=yylineno;
@@ -470,8 +462,8 @@ node_t make_node_string(node_nature nature, char* str)
 
 node_t make_node_bool_int(node_nature nature, int64_t val)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->value=val;
     new_node->lineno=yylineno;

@@ -1,8 +1,8 @@
-int global1 = 0;
+int global1 = 123456789011223405954;
 bool global2 = false;
 bool global3 = true;
 
-int main()
+void main()
 {
     int entier1, entier2 = 0xBf2, a=1, b=2, c=3;
     bool bool1, bool2 = true;
@@ -43,4 +43,5 @@ int main()
     bool1 = (bool2==global2);
     bool1 = (bool2==global3);
     entier1 = a+b+c*2+a*(b+c);
+    global2 = !global3;
 }

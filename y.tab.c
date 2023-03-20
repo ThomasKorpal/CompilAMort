@@ -83,16 +83,11 @@
 #include "passe_1.h"
 #include "passe_2.h"
 
-
-
-/* Global variables */
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 extern char * outfile;
 int32_t nbNode = 1;
 
-
-/* prototypes */
 int yylex(void);
 extern int yylineno;
 
@@ -109,7 +104,7 @@ node_t make_node_bool_int(node_nature nature, int64_t val);
 /* A completer */
 
 
-#line 113 "y.tab.c"
+#line 108 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -254,13 +249,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 45 "grammar.y"
+#line 40 "grammar.y"
 
     int32_t intval;
     char * strval;
     node_t ptr;
 
-#line 264 "y.tab.c"
+#line 259 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -734,13 +729,13 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    87,    87,    92,   100,   105,   111,   115,   122,   129,
-     133,   137,   144,   148,   155,   159,   166,   173,   178,   184,
-     188,   195,   199,   203,   207,   211,   215,   219,   223,   227,
-     234,   241,   245,   249,   253,   257,   261,   265,   269,   273,
-     277,   281,   285,   289,   293,   297,   301,   305,   309,   313,
-     317,   321,   325,   329,   333,   337,   341,   345,   349,   356,
-     360,   367,   371,   378
+       0,    82,    82,    87,    95,   100,   106,   110,   117,   124,
+     128,   132,   139,   143,   150,   154,   161,   168,   173,   179,
+     183,   190,   194,   198,   202,   206,   210,   214,   218,   222,
+     229,   236,   240,   244,   248,   252,   256,   260,   264,   268,
+     272,   276,   280,   284,   288,   292,   296,   300,   304,   308,
+     312,   316,   320,   324,   328,   332,   336,   340,   344,   351,
+     355,   362,   366,   373
 };
 #endif
 
@@ -1449,505 +1444,505 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: listdeclnonnull maindecl  */
-#line 88 "grammar.y"
+#line 83 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_PROGRAM, 2, (yyvsp[-1].ptr), (yyvsp[0].ptr));
             *program_root = (yyval.ptr);
         }
-#line 1458 "y.tab.c"
+#line 1453 "y.tab.c"
     break;
 
   case 3: /* program: maindecl  */
-#line 93 "grammar.y"
+#line 88 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_PROGRAM, 2, NULL, (yyvsp[0].ptr));
             *program_root = (yyval.ptr);
         }
-#line 1467 "y.tab.c"
+#line 1462 "y.tab.c"
     break;
 
   case 4: /* listdecl: listdeclnonnull  */
-#line 101 "grammar.y"
+#line 96 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1475 "y.tab.c"
+#line 1470 "y.tab.c"
     break;
 
   case 5: /* listdecl: %empty  */
-#line 105 "grammar.y"
+#line 100 "grammar.y"
         {
             (yyval.ptr) = NULL;
         }
-#line 1483 "y.tab.c"
+#line 1478 "y.tab.c"
     break;
 
   case 6: /* listdeclnonnull: vardecl  */
-#line 112 "grammar.y"
+#line 107 "grammar.y"
         { 
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1491 "y.tab.c"
+#line 1486 "y.tab.c"
     break;
 
   case 7: /* listdeclnonnull: listdeclnonnull vardecl  */
-#line 116 "grammar.y"
+#line 111 "grammar.y"
         { 
             (yyval.ptr) = make_node(NODE_LIST, 2, (yyvsp[-1].ptr), (yyvsp[0].ptr));
         }
-#line 1499 "y.tab.c"
+#line 1494 "y.tab.c"
     break;
 
   case 8: /* vardecl: type listtypedecl TOK_SEMICOL  */
-#line 123 "grammar.y"
+#line 118 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_DECLS, 2, (yyvsp[-2].ptr), (yyvsp[-1].ptr));
         }
-#line 1507 "y.tab.c"
+#line 1502 "y.tab.c"
     break;
 
   case 9: /* type: TOK_INT  */
-#line 130 "grammar.y"
+#line 125 "grammar.y"
         {
             (yyval.ptr) = make_node_type(NODE_TYPE, TYPE_INT);
         }
-#line 1515 "y.tab.c"
+#line 1510 "y.tab.c"
     break;
 
   case 10: /* type: TOK_BOOL  */
-#line 134 "grammar.y"
+#line 129 "grammar.y"
         {
             (yyval.ptr) = make_node_type(NODE_TYPE, TYPE_BOOL);
         }
-#line 1523 "y.tab.c"
+#line 1518 "y.tab.c"
     break;
 
   case 11: /* type: TOK_VOID  */
-#line 138 "grammar.y"
+#line 133 "grammar.y"
         {
             (yyval.ptr) = make_node_type(NODE_TYPE, TYPE_VOID);
         }
-#line 1531 "y.tab.c"
+#line 1526 "y.tab.c"
     break;
 
   case 12: /* listtypedecl: decl  */
-#line 145 "grammar.y"
+#line 140 "grammar.y"
         { 
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1539 "y.tab.c"
+#line 1534 "y.tab.c"
     break;
 
   case 13: /* listtypedecl: listtypedecl TOK_COMMA decl  */
-#line 149 "grammar.y"
+#line 144 "grammar.y"
         { 
             (yyval.ptr) = make_node(NODE_LIST, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1547 "y.tab.c"
+#line 1542 "y.tab.c"
     break;
 
   case 14: /* decl: ident  */
-#line 156 "grammar.y"
+#line 151 "grammar.y"
         { 
             (yyval.ptr) = make_node(NODE_DECL, 2, (yyvsp[0].ptr), NULL);
         }
-#line 1555 "y.tab.c"
+#line 1550 "y.tab.c"
     break;
 
   case 15: /* decl: ident TOK_AFFECT expr  */
-#line 160 "grammar.y"
+#line 155 "grammar.y"
         { 
             (yyval.ptr) = make_node(NODE_DECL, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1563 "y.tab.c"
+#line 1558 "y.tab.c"
     break;
 
   case 16: /* maindecl: type ident TOK_LPAR TOK_RPAR block  */
-#line 167 "grammar.y"
+#line 162 "grammar.y"
         {
             (yyval.ptr) = make_node_main_if(NODE_FUNC, 3, (yyvsp[-4].ptr), (yyvsp[-3].ptr), (yyvsp[0].ptr));
         }
-#line 1571 "y.tab.c"
+#line 1566 "y.tab.c"
     break;
 
   case 17: /* listinst: listinstnonnull  */
-#line 174 "grammar.y"
+#line 169 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1579 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 18: /* listinst: %empty  */
-#line 178 "grammar.y"
+#line 173 "grammar.y"
         {
             (yyval.ptr) = NULL;
         }
-#line 1587 "y.tab.c"
+#line 1582 "y.tab.c"
     break;
 
   case 19: /* listinstnonnull: inst  */
-#line 185 "grammar.y"
+#line 180 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1595 "y.tab.c"
+#line 1590 "y.tab.c"
     break;
 
   case 20: /* listinstnonnull: listinstnonnull inst  */
-#line 189 "grammar.y"
+#line 184 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_LIST, 2, (yyvsp[-1].ptr), (yyvsp[0].ptr));
         }
-#line 1603 "y.tab.c"
+#line 1598 "y.tab.c"
     break;
 
   case 21: /* inst: expr TOK_SEMICOL  */
-#line 196 "grammar.y"
+#line 191 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[-1].ptr);
         }
-#line 1611 "y.tab.c"
+#line 1606 "y.tab.c"
     break;
 
   case 22: /* inst: TOK_IF TOK_LPAR expr TOK_RPAR inst TOK_ELSE inst  */
-#line 200 "grammar.y"
+#line 195 "grammar.y"
         {
             (yyval.ptr) = make_node_main_if(NODE_IF, 3, (yyvsp[-4].ptr), (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1619 "y.tab.c"
+#line 1614 "y.tab.c"
     break;
 
   case 23: /* inst: TOK_IF TOK_LPAR expr TOK_RPAR inst  */
-#line 204 "grammar.y"
+#line 199 "grammar.y"
         {
             (yyval.ptr) = make_node_main_if(NODE_IF, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr), NULL);                //?????????????????????????????????????????????
         }
-#line 1627 "y.tab.c"
+#line 1622 "y.tab.c"
     break;
 
   case 24: /* inst: TOK_WHILE TOK_LPAR expr TOK_RPAR inst  */
-#line 208 "grammar.y"
+#line 203 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_WHILE, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1635 "y.tab.c"
+#line 1630 "y.tab.c"
     break;
 
   case 25: /* inst: TOK_FOR TOK_LPAR expr TOK_SEMICOL expr TOK_SEMICOL expr TOK_RPAR inst  */
-#line 212 "grammar.y"
+#line 207 "grammar.y"
         {
             (yyval.ptr) = make_node_for(NODE_FOR, 4, (yyvsp[-6].ptr), (yyvsp[-4].ptr), (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1643 "y.tab.c"
+#line 1638 "y.tab.c"
     break;
 
   case 26: /* inst: TOK_DO inst TOK_WHILE TOK_LPAR expr TOK_RPAR TOK_SEMICOL  */
-#line 216 "grammar.y"
+#line 211 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_DOWHILE, 2, (yyvsp[-5].ptr), (yyvsp[-2].ptr));
         }
-#line 1651 "y.tab.c"
+#line 1646 "y.tab.c"
     break;
 
   case 27: /* inst: block  */
-#line 220 "grammar.y"
+#line 215 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1659 "y.tab.c"
+#line 1654 "y.tab.c"
     break;
 
   case 28: /* inst: TOK_SEMICOL  */
-#line 224 "grammar.y"
+#line 219 "grammar.y"
         {
             (yyval.ptr) = NULL;                                                        //????????????????????????????????????????????????
         }
-#line 1667 "y.tab.c"
+#line 1662 "y.tab.c"
     break;
 
   case 29: /* inst: TOK_PRINT TOK_LPAR listparamprint TOK_RPAR TOK_SEMICOL  */
-#line 228 "grammar.y"
+#line 223 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_PRINT, 1, (yyvsp[-2].ptr), NULL);
         }
-#line 1675 "y.tab.c"
+#line 1670 "y.tab.c"
     break;
 
   case 30: /* block: TOK_LACC listdecl listinst TOK_RACC  */
-#line 235 "grammar.y"
+#line 230 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_BLOCK, 2, (yyvsp[-2].ptr), (yyvsp[-1].ptr));
         }
-#line 1683 "y.tab.c"
+#line 1678 "y.tab.c"
     break;
 
   case 31: /* expr: expr TOK_MUL expr  */
-#line 242 "grammar.y"
+#line 237 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_MUL, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1691 "y.tab.c"
+#line 1686 "y.tab.c"
     break;
 
   case 32: /* expr: expr TOK_DIV expr  */
-#line 246 "grammar.y"
+#line 241 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_DIV, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1699 "y.tab.c"
+#line 1694 "y.tab.c"
     break;
 
   case 33: /* expr: expr TOK_PLUS expr  */
-#line 250 "grammar.y"
+#line 245 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_PLUS, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1707 "y.tab.c"
+#line 1702 "y.tab.c"
     break;
 
   case 34: /* expr: expr TOK_MINUS expr  */
-#line 254 "grammar.y"
+#line 249 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_MINUS, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1715 "y.tab.c"
+#line 1710 "y.tab.c"
     break;
 
   case 35: /* expr: expr TOK_MOD expr  */
-#line 258 "grammar.y"
+#line 253 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_MOD, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1723 "y.tab.c"
+#line 1718 "y.tab.c"
     break;
 
   case 36: /* expr: expr TOK_LT expr  */
-#line 262 "grammar.y"
+#line 257 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_LT, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1731 "y.tab.c"
+#line 1726 "y.tab.c"
     break;
 
   case 37: /* expr: expr TOK_GT expr  */
-#line 266 "grammar.y"
+#line 261 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_GT, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1739 "y.tab.c"
+#line 1734 "y.tab.c"
     break;
 
   case 38: /* expr: TOK_MINUS expr  */
-#line 270 "grammar.y"
+#line 265 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_UMINUS, 1, (yyvsp[0].ptr), NULL);
         }
-#line 1747 "y.tab.c"
+#line 1742 "y.tab.c"
     break;
 
   case 39: /* expr: expr TOK_GE expr  */
-#line 274 "grammar.y"
+#line 269 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_GE, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1755 "y.tab.c"
+#line 1750 "y.tab.c"
     break;
 
   case 40: /* expr: expr TOK_LE expr  */
-#line 278 "grammar.y"
+#line 273 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_LE, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1763 "y.tab.c"
+#line 1758 "y.tab.c"
     break;
 
   case 41: /* expr: expr TOK_EQ expr  */
-#line 282 "grammar.y"
+#line 277 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_EQ, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1771 "y.tab.c"
+#line 1766 "y.tab.c"
     break;
 
   case 42: /* expr: expr TOK_NE expr  */
-#line 286 "grammar.y"
+#line 281 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_NE, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1779 "y.tab.c"
+#line 1774 "y.tab.c"
     break;
 
   case 43: /* expr: expr TOK_AND expr  */
-#line 290 "grammar.y"
+#line 285 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_AND, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1787 "y.tab.c"
+#line 1782 "y.tab.c"
     break;
 
   case 44: /* expr: expr TOK_OR expr  */
-#line 294 "grammar.y"
+#line 289 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_OR, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1795 "y.tab.c"
+#line 1790 "y.tab.c"
     break;
 
   case 45: /* expr: expr TOK_BAND expr  */
-#line 298 "grammar.y"
+#line 293 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_BAND, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1803 "y.tab.c"
+#line 1798 "y.tab.c"
     break;
 
   case 46: /* expr: expr TOK_BOR expr  */
-#line 302 "grammar.y"
+#line 297 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_BOR, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1811 "y.tab.c"
+#line 1806 "y.tab.c"
     break;
 
   case 47: /* expr: expr TOK_BXOR expr  */
-#line 306 "grammar.y"
+#line 301 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_BXOR, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1819 "y.tab.c"
+#line 1814 "y.tab.c"
     break;
 
   case 48: /* expr: expr TOK_SRL expr  */
-#line 310 "grammar.y"
+#line 305 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_SRL, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1827 "y.tab.c"
+#line 1822 "y.tab.c"
     break;
 
   case 49: /* expr: expr TOK_SRA expr  */
-#line 314 "grammar.y"
+#line 309 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_SRA, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1835 "y.tab.c"
+#line 1830 "y.tab.c"
     break;
 
   case 50: /* expr: expr TOK_SLL expr  */
-#line 318 "grammar.y"
+#line 313 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_SLL, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1843 "y.tab.c"
+#line 1838 "y.tab.c"
     break;
 
   case 51: /* expr: TOK_NOT expr  */
-#line 322 "grammar.y"
+#line 317 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_NOT, 1, (yyvsp[0].ptr), NULL);
         }
-#line 1851 "y.tab.c"
+#line 1846 "y.tab.c"
     break;
 
   case 52: /* expr: TOK_BNOT expr  */
-#line 326 "grammar.y"
+#line 321 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_BNOT, 1, (yyvsp[0].ptr), NULL);
         }
-#line 1859 "y.tab.c"
+#line 1854 "y.tab.c"
     break;
 
   case 53: /* expr: TOK_LPAR expr TOK_RPAR  */
-#line 330 "grammar.y"
+#line 325 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[-1].ptr);                                                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
-#line 1867 "y.tab.c"
+#line 1862 "y.tab.c"
     break;
 
   case 54: /* expr: ident TOK_AFFECT expr  */
-#line 334 "grammar.y"
+#line 329 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_AFFECT, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1875 "y.tab.c"
+#line 1870 "y.tab.c"
     break;
 
   case 55: /* expr: TOK_INTVAL  */
-#line 338 "grammar.y"
+#line 333 "grammar.y"
         {
             (yyval.ptr) = make_node_bool_int(NODE_INTVAL, (yyvsp[0].intval));
         }
-#line 1883 "y.tab.c"
+#line 1878 "y.tab.c"
     break;
 
   case 56: /* expr: TOK_TRUE  */
-#line 342 "grammar.y"
+#line 337 "grammar.y"
         {
             (yyval.ptr) = make_node_bool_int(NODE_BOOLVAL, 1);
         }
-#line 1891 "y.tab.c"
+#line 1886 "y.tab.c"
     break;
 
   case 57: /* expr: TOK_FALSE  */
-#line 346 "grammar.y"
+#line 341 "grammar.y"
         {
             (yyval.ptr) = make_node_bool_int(NODE_BOOLVAL, 0);
         }
-#line 1899 "y.tab.c"
+#line 1894 "y.tab.c"
     break;
 
   case 58: /* expr: ident  */
-#line 350 "grammar.y"
+#line 345 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1907 "y.tab.c"
+#line 1902 "y.tab.c"
     break;
 
   case 59: /* listparamprint: listparamprint TOK_COMMA paramprint  */
-#line 357 "grammar.y"
+#line 352 "grammar.y"
         {
             (yyval.ptr) = make_node(NODE_LIST, 2, (yyvsp[-2].ptr), (yyvsp[0].ptr));
         }
-#line 1915 "y.tab.c"
+#line 1910 "y.tab.c"
     break;
 
   case 60: /* listparamprint: paramprint  */
-#line 361 "grammar.y"
+#line 356 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);
         }
-#line 1923 "y.tab.c"
+#line 1918 "y.tab.c"
     break;
 
   case 61: /* paramprint: ident  */
-#line 368 "grammar.y"
+#line 363 "grammar.y"
         {
             (yyval.ptr) = (yyvsp[0].ptr);    
         }
-#line 1931 "y.tab.c"
+#line 1926 "y.tab.c"
     break;
 
   case 62: /* paramprint: TOK_STRING  */
-#line 372 "grammar.y"
+#line 367 "grammar.y"
         {
             (yyval.ptr) = make_node_string(NODE_STRINGVAL, (yyvsp[0].strval));
         }
-#line 1939 "y.tab.c"
+#line 1934 "y.tab.c"
     break;
 
   case 63: /* ident: TOK_IDENT  */
-#line 379 "grammar.y"
+#line 374 "grammar.y"
         {
             (yyval.ptr) = make_node_ident(NODE_IDENT, (yyvsp[0].strval));
         }
-#line 1947 "y.tab.c"
+#line 1942 "y.tab.c"
     break;
 
 
-#line 1951 "y.tab.c"
+#line 1946 "y.tab.c"
 
       default: break;
     }
@@ -2140,14 +2135,13 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 383 "grammar.y"
+#line 378 "grammar.y"
 
 
 /* A completer et/ou remplacer avec d'autres fonctions */
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 {
-    va_list ap;
-    node_t new_node = malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node = malloc(sizeof(node_s));
     new_node->nature = nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -2163,8 +2157,7 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 
 node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3)
 {
-    va_list ap;
-    node_t new_node=malloc(sizeof(node_s));                         //node_s ?????????????????????????????????
+    node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
@@ -2181,7 +2174,6 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
 
 node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, node_t enf3, node_t enf4)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
     new_node->nops=nops;
@@ -2197,8 +2189,8 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
 
 node_t make_node_type(node_nature nature, node_type type)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->type=type;
     new_node->lineno=yylineno;
@@ -2208,8 +2200,8 @@ node_t make_node_type(node_nature nature, node_type type)
 
 node_t make_node_ident(node_nature nature, char* ident)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->ident=ident;
     new_node->lineno=yylineno;
@@ -2220,8 +2212,8 @@ node_t make_node_ident(node_nature nature, char* ident)
 
 node_t make_node_string(node_nature nature, char* str)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->str=str;
     new_node->lineno=yylineno;
@@ -2231,8 +2223,8 @@ node_t make_node_string(node_nature nature, char* str)
 
 node_t make_node_bool_int(node_nature nature, int64_t val)
 {
-    va_list ap;
     node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
     new_node->nature=nature;
     new_node->value=val;
     new_node->lineno=yylineno;

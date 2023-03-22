@@ -38,6 +38,7 @@ void DFS(node_t root)
                 printf("Error line %d: variable can not be of type void\n",root->lineno);
             }
         }
+        //Problème ici
         if(root->nature == NODE_DECL)
         {
             if(root->opr[1]!=NULL)
@@ -63,6 +64,7 @@ void DFS(node_t root)
                 }
             }
         }
+        //Fin de la zone à problème
         if(root->nature == NODE_FUNC)
         {
             if(root->opr[0]->type==TYPE_VOID)

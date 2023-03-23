@@ -180,10 +180,10 @@ int main(int argc, char ** argv) {
             if(!stop_after_syntax)
             {
                 analyse_tree(program_root);
+                analyse_passe_1(program_root);
                 if(!stop_after_verif)
                 {
                     //reste du code
-                    analyse_passe_1(program_root);
                     //gen_code_passe_2(program_root);
                 }
             }

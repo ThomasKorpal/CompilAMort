@@ -15,7 +15,6 @@ node_t make_node_global(node_nature nature, int64_t val, int32_t lineno);
 void analyse_passe_1(node_t root)
 {
     //parcours_arbre_offset_ident(root,trace_level);
-    printf("COUCOU 1\n");
     DFS(root);
 }
 
@@ -36,11 +35,7 @@ void DFS(node_t root)
         
         if(root->nature == NODE_DECLS)
         {
-            if(root->opr[0]->type != TYPE_VOID)
-            {
-                propaType(root->opr[1], root->opr[0]->type);
-            }
-            else
+            if(root->opr[0]->type == TYPE_VOID)
             {
                 printf("Error line %d: variable can not be of type void\n",root->lineno);
             }
@@ -52,10 +47,12 @@ void DFS(node_t root)
                 if(root->opr[0]->type==root->opr[1]->type && root->opr[0]->type == (TYPE_INT || TYPE_BOOL))
                 {
                     root->type = root->opr[0]->type;
+                    root->global_decl = global;
                 }
                 else
                 {
                     printf("Error line %d: wrong type declared\n",root->lineno);
+                    printf("%d vs %d\n", root->opr[0]->type, root->opr[1]->type);
                 }
             }
             else if(global)
@@ -68,6 +65,7 @@ void DFS(node_t root)
                 {
                     root->opr[1] = make_node_global(NODE_BOOLVAL, 0, root->opr[0]->lineno);
                 }
+                root->global_decl = true;
             }
         }
         else if(root->nature == NODE_FUNC)

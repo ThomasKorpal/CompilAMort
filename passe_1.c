@@ -23,10 +23,17 @@ void DFS(node_t root)
 {
     if(root!=NULL)
     {    
+        if(root->nature == NODE_DECLS)
+        {
+            propaType(root->opr[1], root->opr[0]->type);
+        }
+        
+        //Parcours en profondeur
         for (int i = 0; i<root->nops; i++)
         {
             DFS(root->opr[i]);
         }
+        
         if(root->nature == NODE_DECLS)
         {
             if(root->opr[0]->type != TYPE_VOID)
@@ -38,8 +45,7 @@ void DFS(node_t root)
                 printf("Error line %d: variable can not be of type void\n",root->lineno);
             }
         }
-        //Problème ici
-        if(root->nature == NODE_DECL)
+        else if(root->nature == NODE_DECL)
         {
             if(root->opr[1]!=NULL)
             {
@@ -64,8 +70,7 @@ void DFS(node_t root)
                 }
             }
         }
-        //Fin de la zone à problème
-        if(root->nature == NODE_FUNC)
+        else if(root->nature == NODE_FUNC)
         {
             if(root->opr[0]->type==TYPE_VOID)
             {
@@ -83,14 +88,14 @@ void DFS(node_t root)
                 printf("Error line %d: function's type is not void\n",root->lineno);
             }
         }
-        if(root->nature == (NODE_IF || NODE_WHILE))
+        else if(root->nature == (NODE_IF || NODE_WHILE))
         {
             if(root->opr[0]->type!=TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
             }
         }
-        if(root->nature == (NODE_FOR || NODE_DOWHILE))
+        else if(root->nature == (NODE_FOR || NODE_DOWHILE))
         {
             if(root->opr[1]->type != TYPE_BOOL)
             {
@@ -98,7 +103,7 @@ void DFS(node_t root)
                 //Verif autres fils   
             }
         }
-        if(root->nature == (NODE_PLUS || NODE_MINUS || NODE_MUL || NODE_DIV || NODE_MOD))
+        else if(root->nature == (NODE_PLUS || NODE_MINUS || NODE_MUL || NODE_DIV || NODE_MOD))
         {
             if(!(root->opr[0]->type == TYPE_INT && root->opr[1]->type == TYPE_INT))
             {
@@ -106,7 +111,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_INT;
         }
-        if(root->nature == (NODE_LT || NODE_GT || NODE_LE || NODE_GE))
+        else if(root->nature == (NODE_LT || NODE_GT || NODE_LE || NODE_GE))
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
@@ -114,7 +119,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_BOOL;
         }
-        if(root->nature == (NODE_EQ || NODE_NE))
+        else if(root->nature == (NODE_EQ || NODE_NE))
         {
             if(root->opr[0]->type!=root->opr[1]->type || root->opr[0]->type ==(TYPE_VOID || TYPE_NONE))
             {
@@ -122,7 +127,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_BOOL;
         }
-        if(root->nature == (NODE_AND || NODE_OR))
+        else if(root->nature == (NODE_AND || NODE_OR))
         {
             if(!(root->opr[0]->type == TYPE_BOOL && root->opr[1]->type == TYPE_BOOL))
             {
@@ -130,7 +135,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_BOOL;
         }
-        if(root->nature == (NODE_BAND || NODE_BOR || NODE_BXOR))
+        else if(root->nature == (NODE_BAND || NODE_BOR || NODE_BXOR))
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
@@ -138,7 +143,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_INT;
         }
-        if(root->nature == NODE_NOT)
+        else if(root->nature == NODE_NOT)
         {
             if(root->opr[0]->type != TYPE_BOOL)
             {
@@ -146,7 +151,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_BOOL;
         }
-        if(root->nature == NODE_BNOT)
+        else if(root->nature == NODE_BNOT)
         {
             if(root->opr[0]->type != TYPE_INT)
             {
@@ -154,7 +159,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_INT;
         }
-        if(root->nature == (NODE_SLL || NODE_SRL || NODE_SRA))
+        else if(root->nature == (NODE_SLL || NODE_SRL || NODE_SRA))
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
@@ -162,7 +167,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_INT;
         }
-        if(root->nature == NODE_UMINUS)
+        else if(root->nature == NODE_UMINUS)
         {
             if(root->opr[0]->type != TYPE_INT)
             {
@@ -170,7 +175,7 @@ void DFS(node_t root)
             }
             root->type = TYPE_INT;
         }
-        if(root->nature == NODE_AFFECT)
+        else if(root->nature == NODE_AFFECT)
         {
             if(root->opr[0]->type != root->opr[1]->type)
             {
@@ -178,7 +183,7 @@ void DFS(node_t root)
             }
             root->type = root->opr[0]->type;
         }
-        if(root->nature == NODE_PRINT)
+        else if(root->nature == NODE_PRINT)
         {
             if(root->opr[0]->type != root->opr[1]->type)
             {

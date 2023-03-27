@@ -19,6 +19,7 @@ int32_t trace_level = DEFAULT_TRACE_LEVEL;
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 extern int flagb;
+int flagVerif = 0;
 
 void fctUsage()
 {

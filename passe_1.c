@@ -7,44 +7,65 @@
 #include "utils/miniccutils.h"
 
 extern int trace_level;
+extern int flagVerif;
 bool global = true;
 
 void DFS(node_t root);
 node_t make_node_global(node_nature nature, int64_t val, int32_t lineno);
+void verifprint(node_t root);
 
 void analyse_passe_1(node_t root)
 {
     //parcours_arbre_offset_ident(root,trace_level);
+    if(root->nature == NODE_PROGRAM)
+    {
+        push_global_context();
+    }
     DFS(root);
 }
 
 void DFS(node_t root)
 {
+    //printf("Node : line n° %d : %d\n",root->lineno,root->node_num);
     if(root!=NULL)
     {    
+        if(root->nature == NODE_BLOCK)
+        {
+            push_context();
+        }
+        if(root->nature == NODE_FUNC)
+        {
+            reset_env_current_offset();
+        }
         if(root->nature == NODE_DECLS)
         {
             propaType(root->opr[1], root->opr[0]->type);
         }
-        
+
         //Parcours en profondeur
         for (int i = 0; i<root->nops; i++)
         {
             DFS(root->opr[i]);
         }
-        
+
+        // traitement des verifications
+        if(root->nature == NODE_BLOCK)
+        {
+            pop_context();
+        }    
         if(root->nature == NODE_DECLS)
         {
             if(root->opr[0]->type == TYPE_VOID)
             {
                 printf("Error line %d: variable can not be of type void\n",root->lineno);
+                flagVerif = 1;
             }
         }
-        else if(root->nature == NODE_DECL)
+        if(root->nature == NODE_DECL)
         {
             if(root->opr[1]!=NULL)
             {
-                if(root->opr[0]->type==root->opr[1]->type && root->opr[0]->type == (TYPE_INT || TYPE_BOOL))
+                if((root->opr[0]->type==root->opr[1]->type) && (root->opr[0]->type==TYPE_INT || root->opr[0]->type==TYPE_BOOL))
                 {
                     root->type = root->opr[0]->type;
                     root->global_decl = global;
@@ -53,6 +74,7 @@ void DFS(node_t root)
                 {
                     printf("Error line %d: wrong type declared\n",root->lineno);
                     printf("%d vs %d\n", root->opr[0]->type, root->opr[1]->type);
+                    flagVerif = 1;
                 }
             }
             else if(global)
@@ -68,7 +90,51 @@ void DFS(node_t root)
                 root->global_decl = true;
             }
         }
-        else if(root->nature == NODE_FUNC)
+        if(root->nature == NODE_IDENT)
+        {
+            /*int test = env_add_element(root->ident,root);
+            if(test >= 0)
+            {
+                root->offset = test;
+            }
+            else
+            {
+                if(root->type == TYPE_NONE)
+                {
+                    node_t temp = get_decl_node(root->ident);
+                    if(temp != root)
+                    {
+                        root->decl_node = temp;
+                        root->type = root->decl_node->type;
+                    }
+                }
+                else
+                {
+                    printf("Error line %d: double declaration (%s)\n",root->lineno,root->ident);
+                    flagVerif = 1;
+                }
+            }*/
+            node_t node_pt;
+            node_pt = get_decl_node(root->ident);
+            if((node_pt != root) && (node_pt != NULL))
+            {
+                root->decl_node = node_pt;
+                root->type = root->decl_node->type;
+            }
+            else if(strcmp(root->ident, "main"))
+            {
+                int test = env_add_element(root->ident,root);
+                if(test >= 0)
+                {
+                    root->offset = test;
+                }
+            }
+        }
+        if(root->nature == NODE_STRINGVAL)
+        {
+            add_string(root->str);
+        }
+        if(root->nature == NODE_FUNC)
         {
             if(root->opr[0]->type==TYPE_VOID)
             {
@@ -79,115 +145,126 @@ void DFS(node_t root)
                 else
                 {
                     printf("Error line %d: function's name is not main\n",root->lineno);
+                    flagVerif = 1;
                 }
             }
             else
             {
                 printf("Error line %d: function's type is not void\n",root->lineno);
+                flagVerif = 1;
             }
+            root->offset = get_env_current_offset();
         }
-        else if(root->nature == (NODE_IF || NODE_WHILE))
+        if(root->nature == NODE_IF || root->nature == NODE_WHILE)
         {
             if(root->opr[0]->type!=TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                flagVerif = 1;
             }
         }
-        else if(root->nature == (NODE_FOR || NODE_DOWHILE))
+        if(root->nature == NODE_FOR || root->nature == NODE_DOWHILE)
         {
             if(root->opr[1]->type != TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                flagVerif = 1;
                 //Verif autres fils   
             }
         }
-        else if(root->nature == (NODE_PLUS || NODE_MINUS || NODE_MUL || NODE_DIV || NODE_MOD))
+        if(root->nature == NODE_PLUS || root->nature == NODE_MINUS || root->nature == NODE_MUL || root->nature == NODE_DIV || root->nature == NODE_MOD)
         {
             if(!(root->opr[0]->type == TYPE_INT && root->opr[1]->type == TYPE_INT))
             {
                 printf("Error line %d: operator not working on non-int variables\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_INT;
         }
-        else if(root->nature == (NODE_LT || NODE_GT || NODE_LE || NODE_GE))
+        if(root->nature == NODE_LT || root->nature == NODE_GT || root->nature == NODE_LE || root->nature == NODE_GE)
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_BOOL;
         }
-        else if(root->nature == (NODE_EQ || NODE_NE))
+        if(root->nature == NODE_EQ || root->nature == NODE_NE)
         {
-            if(root->opr[0]->type!=root->opr[1]->type || root->opr[0]->type ==(TYPE_VOID || TYPE_NONE))
+            if((root->opr[0]->type!=root->opr[1]->type) || (root->opr[0]->type == TYPE_VOID) || (root->opr[0]->type == TYPE_NONE))
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_BOOL;
         }
-        else if(root->nature == (NODE_AND || NODE_OR))
+        if(root->nature == NODE_AND || root->nature == NODE_OR)
         {
             if(!(root->opr[0]->type == TYPE_BOOL && root->opr[1]->type == TYPE_BOOL))
             {
                 printf("Error line %d: wrong type (operator requires boolean)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_BOOL;
         }
-        else if(root->nature == (NODE_BAND || NODE_BOR || NODE_BXOR))
+        if(root->nature == NODE_BAND || root->nature == NODE_BOR || root->nature == NODE_BXOR)
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_INT;
         }
-        else if(root->nature == NODE_NOT)
+        if(root->nature == NODE_NOT)
         {
             if(root->opr[0]->type != TYPE_BOOL)
             {
                 printf("Error line %d: wrong type (operator requires boolean)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_BOOL;
         }
-        else if(root->nature == NODE_BNOT)
+        if(root->nature == NODE_BNOT)
         {
             if(root->opr[0]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_INT;
         }
-        else if(root->nature == (NODE_SLL || NODE_SRL || NODE_SRA))
+        if(root->nature == NODE_SLL || root->nature == NODE_SRL || root->nature == NODE_SRA)
         {
-            if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
+            if((root->opr[0]->type != TYPE_INT) || (root->opr[1]->type != TYPE_INT))
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_INT;
         }
-        else if(root->nature == NODE_UMINUS)
+        if(root->nature == NODE_UMINUS)
         {
             if(root->opr[0]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = TYPE_INT;
         }
-        else if(root->nature == NODE_AFFECT)
+        if(root->nature == NODE_AFFECT)
         {
             if(root->opr[0]->type != root->opr[1]->type)
             {
                 printf("Error line %d: wrong type (operator requires two operands of the same type)\n",root->lineno);
+                flagVerif = 1;
             }
             root->type = root->opr[0]->type;
         }
-        else if(root->nature == NODE_PRINT)
+        if(root->nature == NODE_PRINT)
         {
-            if(root->opr[0]->type != root->opr[1]->type)
-            {
-                printf("Error line %d: wrong type (operator requires two operands of the same type)\n",root->lineno);
-            }
-            root->type = root->opr[0]->type;
+            verifprint(root->opr[0]);
         }
     }
 }
@@ -207,7 +284,10 @@ void propaType(node_t root, node_type type)
 {
     for(int i = 0; i < root->nops; i++)
     {
-        propaType(root->opr[i],type);
+        if(root->opr[i]!=NULL)
+        {
+            propaType(root->opr[i],type);
+        }
     }
     if((root->nature)==NODE_IDENT)
     {
@@ -215,37 +295,19 @@ void propaType(node_t root, node_type type)
     }
 }
 
-/*void parcours_arbre_offset_ident(node_t root, int trace_level)
+void verifprint(node_t root)
 {
-    //En gros on fait un DFS ou on va reperer tous les noeuds NODE_IDENT
-    //On met a jour les offset des NODE_IDENT fils d'un NODE_DECLS 
-    //Si le NODE_DECLS est fils d'un NODE_LIST => initialisation des offsets global au NODE_LIST
-    node_t* tab_node_ident = DFS_OFFSET_IDENT(root,trace_level);
-    int nbNodeIdent = sizeof(tab_node_ident)/sizeof(tab_node_ident[0]);
-    for(int i=0; i<nbNodeIdent; i++)
+    if(root->nature==(NODE_LIST))
     {
-        if(tab_node_ident[i]->offset == -1 && tab_node_ident[i]->decl_node == NULL)
+        verifprint(root->opr[0]);
+        verifprint(root->opr[1]);
+    }
+    else
+    {
+        if(root->nature!=NODE_IDENT && root->nature!=NODE_STRINGVAL)
         {
-            for(int j=0; j<nbNodeIdent; j++)
-            {
-                if(!strcmp(tab_node_ident[i]->ident,tab_node_ident[j]->ident) && i!=j && tab_node_ident[j]->offset >= 0)//Identifier les noeuds NODE_IDENT qui sont des declarations de variable
-                {
-                    tab_node_ident[i]->decl_node=tab_node_ident[j];
-                    if(trace_level == 2)
-                    {
-                        printf("Adding node connexion\n");
-                    }
-                    else if(trace_level > 3)
-                    {
-                        printf("Connexion : node %d to node",i,j);
-                    }
-                }
-            }
+            printf("Error line %d: wrong type in print, only string or ident\n",root->lineno);
+            flagVerif = 1;
         }
     }
-}node_t* DFS_OFFSET_IDENT(node_t root, int trace_level)
-{
-    //DFS qui va compter le nombre de NODE_IDENT de l'arbre et retourner un tableau des noeuds
-    //On initialisera les offset dans cette fonction
-}*/
-
+}

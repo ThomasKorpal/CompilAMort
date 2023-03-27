@@ -30,7 +30,8 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
 node_t make_node_type(node_nature nature, node_type type);
 node_t make_node_ident(node_nature nature, char* ident);
 node_t make_node_string(node_nature nature, char* str);
-node_t make_node_bool_int(node_nature nature, int64_t val);
+node_t make_node_int(node_nature nature, int64_t val);
+node_t make_node_bool(node_nature nature, int64_t val);
 /* A completer */
 
 %}
@@ -323,7 +324,7 @@ expr:
         }
         | TOK_LPAR expr TOK_RPAR
         {
-            $$ = $2;                                                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $$ = $2;
         }
         | ident TOK_AFFECT expr
         {
@@ -331,15 +332,15 @@ expr:
         }
         | TOK_INTVAL
         {
-            $$ = make_node_bool_int(NODE_INTVAL, $1);
+            $$ = make_node_int(NODE_INTVAL, $1);
         }
         | TOK_TRUE
         {
-            $$ = make_node_bool_int(NODE_BOOLVAL, 1);
+            $$ = make_node_bool(NODE_BOOLVAL, 1);
         }
         | TOK_FALSE
         {
-            $$ = make_node_bool_int(NODE_BOOLVAL, 0);
+            $$ = make_node_bool(NODE_BOOLVAL, 0);
         }
         | ident
         {
@@ -445,7 +446,6 @@ node_t make_node_ident(node_nature nature, char* ident)
     new_node->ident=ident;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
-    new_node->offset = -1;
     return new_node;
 }
 
@@ -460,11 +460,24 @@ node_t make_node_string(node_nature nature, char* str)
     return new_node;
 }
 
-node_t make_node_bool_int(node_nature nature, int64_t val)
+node_t make_node_int(node_nature nature, int64_t val)
 {
     node_t new_node=malloc(sizeof(node_s));
     new_node->nops=0;
     new_node->nature=nature;
+    new_node->type=TYPE_INT;
+    new_node->value=val;
+    new_node->lineno=yylineno;
+    new_node->node_num=nbNode++;
+    return new_node;
+}
+
+node_t make_node_bool(node_nature nature, int64_t val)
+{
+    node_t new_node=malloc(sizeof(node_s));
+    new_node->nops=0;
+    new_node->nature=nature;
+    new_node->type=TYPE_BOOL;
     new_node->value=val;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
@@ -474,10 +487,10 @@ node_t make_node_bool_int(node_nature nature, int64_t val)
 void analyse_tree(node_t root)
 {
     dump_tree(root, "apres_syntaxe.dot");
-    /*if (!stop_after_syntax) 
+    if (!stop_after_syntax) 
     {
         analyse_passe_1(root);
-        //dump_tree(root, "apres_passe_1.dot");
+        dump_tree(root, "apres_passe_1.dot");
         if (!stop_after_verif) 
         {
             create_program(); 
@@ -486,7 +499,7 @@ void analyse_tree(node_t root)
             free_program();
         }
         free_global_strings();
-    }*/
+    }
     free_nodes(root);
 }
 
@@ -500,4 +513,3 @@ void yyerror(node_t * program_root, char * s) {
     fprintf(stderr, "Error line %d: %s\n", yylineno, s);
     exit(1);
 }
-

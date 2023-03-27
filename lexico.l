@@ -146,7 +146,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 {COMMENTAIRE} {
 }
 
-[ \t\n]+
+[ \t\n\r]+
 
 . {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
@@ -177,9 +177,9 @@ int main(int argc, char ** argv) {
             yydebug = 1;
             #endif
             yyparse(&program_root);
+            analyse_tree(program_root);
             if(!stop_after_syntax)
             {
-                analyse_tree(program_root);
                 analyse_passe_1(program_root);
                 if(!stop_after_verif)
                 {

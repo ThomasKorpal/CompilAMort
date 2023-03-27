@@ -1,4 +1,4 @@
-int global1 = 123456789011223405954;
+int global1 = 15;//123456789011223405954;
 bool global2 = false;
 bool global3 = true;
 
@@ -6,6 +6,7 @@ void main()
 {
     int entier1, entier2 = 0xBf2, a=1, b=2, c=3;
     bool bool1, bool2 = true;
+    int i = 0, e;
     for(i; i < e; i = i + 1)
     {
         print("Coucou");

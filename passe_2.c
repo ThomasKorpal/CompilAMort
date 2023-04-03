@@ -90,7 +90,7 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_STRINGVAL)
         {
-            inst_asciiz_create(NULL,root->str);
+            //inst_asciiz_create(NULL,root->str);
         }
         if(root->nature == NODE_FUNC)
         {

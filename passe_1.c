@@ -19,9 +19,11 @@ void analyse_passe_1(node_t root)
     //parcours_arbre_offset_ident(root,trace_level);
     if(root->nature == NODE_PROGRAM)
     {
-        push_global_context();
+        //coucou
     }
+    push_global_context();
     DFS(root);
+    printf("The end\n");
 }
 
 void DFS(node_t root)
@@ -41,7 +43,19 @@ void DFS(node_t root)
         {
             propaType(root->opr[1], root->opr[0]->type);
         }
-
+        if(root->nature == NODE_DECL)
+        {   //ajout à l'environnement
+            int test = env_add_element(root->opr[0]->ident,root->opr[0]);
+            if(test >= 0)
+            {
+                root->opr[0]->offset = test;
+            }
+            else
+            {
+                printf("Error line %d: variable already declared\n",root->lineno);
+                exit(EXIT_FAILURE);
+            }
+        }
         //Parcours en profondeur
         for (int i = 0; i<root->nops; i++)
         {
@@ -114,8 +128,22 @@ void DFS(node_t root)
                     flagVerif = 1;
                 }
             }*/
-            node_t node_pt;
-            node_pt = get_decl_node(root->ident);
+            /*node_t node_pt;
+            node_pt = get_decl_node(root->ident);//on cerche si il est deja déclare
+            if((node_pt != root) && (node_pt != NULL))// && (...))//si c'est le cas on le fait pointer
+            {
+                root->decl_node = node_pt;
+                root->type = root->decl_node->type;
+            }
+            else if(strcmp(root->ident, "main"))//sinon on l'ajoute au contexte courant
+            {
+                int test = env_add_element(root->ident,root);
+                if(test >= 0)
+                {
+                    root->offset = test;
+                }
+            }*/
+            node_t node_pt = get_decl_node(root->ident);
             if((node_pt != root) && (node_pt != NULL))
             {
                 root->decl_node = node_pt;
@@ -123,10 +151,10 @@ void DFS(node_t root)
             }
             else if(strcmp(root->ident, "main"))
             {
-                int test = env_add_element(root->ident,root);
-                if(test >= 0)
+                if(node_pt != root)
                 {
-                    root->offset = test;
+                    printf("Error line %d: non existing variable\n",root->lineno);
+                    exit(EXIT_FAILURE);
                 }
             }
         }

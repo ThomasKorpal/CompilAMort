@@ -1069,7 +1069,7 @@ YY_RULE_SETUP
                 {
                     if(strlen(yytext)>10)
                     {
-                        printf("int out of 32 bits range\n");
+                        printf("Error line %d : int out of 32 bits range\n", yylineno);
                         exit(EXIT_FAILURE);
                     }
                     else
@@ -1085,7 +1085,7 @@ YY_RULE_SETUP
                     }
                     else
                     {
-                        printf("int out of 32 bits range\n");
+                        printf("Error line %d : int out of 32 bits range\n", yylineno);
                         yylval.intval = 0xFFFFFFFF;
                         //flagb=1;
                         exit(EXIT_FAILURE);
@@ -2176,7 +2176,7 @@ int main(int argc, char ** argv) {
             analyse_tree(program_root);
             if(!stop_after_syntax)
             {
-                analyse_passe_1(program_root);
+                //analyse_passe_1(program_root);
                 if(!stop_after_verif)
                 {
                     //reste du code

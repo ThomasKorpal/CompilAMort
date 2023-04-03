@@ -17,13 +17,8 @@ void verifprint(node_t root);
 void analyse_passe_1(node_t root)
 {
     //parcours_arbre_offset_ident(root,trace_level);
-    if(root->nature == NODE_PROGRAM)
-    {
-        //coucou
-    }
     push_global_context();
     DFS(root);
-    printf("The end\n");
 }
 
 void DFS(node_t root)
@@ -106,43 +101,6 @@ void DFS(node_t root)
         }
         if(root->nature == NODE_IDENT)
         {
-            /*int test = env_add_element(root->ident,root);
-            if(test >= 0)
-            {
-                root->offset = test;
-            }
-            else
-            {
-                if(root->type == TYPE_NONE)
-                {
-                    node_t temp = get_decl_node(root->ident);
-                    if(temp != root)
-                    {
-                        root->decl_node = temp;
-                        root->type = root->decl_node->type;
-                    }
-                }
-                else
-                {
-                    printf("Error line %d: double declaration (%s)\n",root->lineno,root->ident);
-                    flagVerif = 1;
-                }
-            }*/
-            /*node_t node_pt;
-            node_pt = get_decl_node(root->ident);//on cerche si il est deja déclare
-            if((node_pt != root) && (node_pt != NULL))// && (...))//si c'est le cas on le fait pointer
-            {
-                root->decl_node = node_pt;
-                root->type = root->decl_node->type;
-            }
-            else if(strcmp(root->ident, "main"))//sinon on l'ajoute au contexte courant
-            {
-                int test = env_add_element(root->ident,root);
-                if(test >= 0)
-                {
-                    root->offset = test;
-                }
-            }*/
             node_t node_pt = get_decl_node(root->ident);
             if((node_pt != root) && (node_pt != NULL))
             {
@@ -160,7 +118,7 @@ void DFS(node_t root)
         }
         if(root->nature == NODE_STRINGVAL)
         {
-            add_string(root->str);
+            root->offset = add_string(root->str);
         }
         if(root->nature == NODE_FUNC)
         {
@@ -302,7 +260,13 @@ node_t make_node_global(node_nature nature, int64_t val, int32_t lineno)
     node_t new_node=malloc(sizeof(node_s));
     new_node->nops=0;
     new_node->nature=nature;
-    new_node->value=val;
+    new_node->type = TYPE_NONE;
+    new_node->offset = 0;
+    new_node->global_decl = false;
+    new_node->opr = NULL;
+    new_node->value=val; 
+    new_node->ident = NULL;
+    new_node->str = NULL;
     new_node->lineno=lineno;
     //new_node->node_num=nbNode++;
     return new_node;

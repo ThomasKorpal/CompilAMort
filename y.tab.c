@@ -2139,11 +2139,15 @@ yyreturnlab:
 #line 379 "grammar.y"
 
 
-/* A completer et/ou remplacer avec d'autres fonctions */
+
 node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
 {
     node_t new_node = malloc(sizeof(node_s));
     new_node->nature = nature;
+    new_node->type = TYPE_NONE;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
     new_node->lineno=yylineno;
@@ -2153,6 +2157,8 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     {
         new_node->opr[1]=enf2;
     }
+    new_node->ident = NULL;
+    new_node->str = NULL;
     return new_node;
 }
 
@@ -2160,6 +2166,10 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
 {
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
+    new_node->type = TYPE_NONE;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
     new_node->lineno=yylineno;
@@ -2170,6 +2180,8 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
     {
         new_node->opr[2]=enf3;
     }
+    new_node->ident = NULL;
+    new_node->str = NULL;
     return new_node;
 }
 
@@ -2177,6 +2189,10 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
 {
     node_t new_node=malloc(sizeof(node_s));
     new_node->nature=nature;
+    new_node->type = TYPE_NONE;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
     new_node->nops=nops;
     new_node->node_num=nbNode++;
     new_node->lineno=yylineno;
@@ -2185,6 +2201,8 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
     new_node->opr[1]=enf2;
     new_node->opr[2]=enf3;
     new_node->opr[3]=enf4;
+    new_node->ident = NULL;
+    new_node->str = NULL;
     return new_node;
 }
 
@@ -2194,8 +2212,14 @@ node_t make_node_type(node_nature nature, node_type type)
     new_node->nops=0;
     new_node->nature=nature;
     new_node->type=type;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
     new_node->lineno=yylineno;
+    new_node->opr = NULL;
     new_node->node_num=nbNode++;
+    new_node->ident = NULL;
+    new_node->str = NULL;
     return new_node;
 }
 
@@ -2203,8 +2227,14 @@ node_t make_node_ident(node_nature nature, char* ident)
 {
     node_t new_node=malloc(sizeof(node_s));
     new_node->nops=0;
+    new_node->type = TYPE_NONE;
     new_node->nature=nature;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
+    new_node->opr = NULL;
     new_node->ident=ident;
+    new_node->str=NULL;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
@@ -2214,7 +2244,13 @@ node_t make_node_string(node_nature nature, char* str)
 {
     node_t new_node=malloc(sizeof(node_s));
     new_node->nops=0;
+    new_node->type = TYPE_NONE;
     new_node->nature=nature;
+    new_node->value = 0;
+    new_node->offset = 0;
+    new_node->global_decl = false;
+    new_node->opr = NULL;
+    new_node->ident=NULL;
     new_node->str=str;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
@@ -2227,7 +2263,12 @@ node_t make_node_int(node_nature nature, int64_t val)
     new_node->nops=0;
     new_node->nature=nature;
     new_node->type=TYPE_INT;
+    new_node->offset = 0;
+    new_node->global_decl = false;
+    new_node->opr = NULL;
     new_node->value=val;
+    new_node->ident=NULL;
+    new_node->str=NULL;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;
@@ -2240,6 +2281,11 @@ node_t make_node_bool(node_nature nature, int64_t val)
     new_node->nature=nature;
     new_node->type=TYPE_BOOL;
     new_node->value=val;
+    new_node->offset = 0;
+    new_node->global_decl = false;
+    new_node->opr = NULL;
+    new_node->ident=NULL;
+    new_node->str=NULL;
     new_node->lineno=yylineno;
     new_node->node_num=nbNode++;
     return new_node;

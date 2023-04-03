@@ -1,4 +1,5 @@
 int global1 = 15;
+int global4;
 bool global2 = false;
 bool global3 = true;
 

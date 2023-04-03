@@ -9,6 +9,7 @@ int numLabel = 1;
 
 void DFSp2(node_t root);
 void addToData();
+int registerAllocator();
 
 void addToData()
 {
@@ -17,8 +18,10 @@ void addToData()
     {
         inst_asciiz_create(NULL,get_global_string(i));
     }
-    
 }
+
+//En gros on va faire l'allocateur de registres, qui sera appelé lors des créations
+//d'instructions dans les 10000 if et l'analyse passe 2 sera appelée dans gen_code_passe_2
 
 void gen_code_passe_2(node_t root) 
 {
@@ -58,11 +61,15 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_DECLS)
         {
-            //ajout dans le .data 
+            
         }
         if(root->nature == NODE_DECL)
         {   
             //ajout dans le .data
+            if(root->opr[0]->type == TYPE_INT || root->opr[0]->type == TYPE_BOOL) 
+            {
+                inst_word_create(NULL,root->opr[0]->value);
+            }
         }
 
         //Parcours en profondeur

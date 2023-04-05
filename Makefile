@@ -61,6 +61,7 @@ passe_2.o: passe_2.c passe_2.h arch.h defs.h common.h Makefile
 clean:
 	@echo "| Cleaning .o files"
 	@rm -f *.o
+	@rm -f *.dot
 
 realclean: clean
 	@echo "| Cleaning lex and yacc files, and executable"

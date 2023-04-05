@@ -4,11 +4,13 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include "utils/miniccutils.h"
 
 #include "defs.h"
 #include "common.h"
 #include "passe_1.h"
 #include "passe_2.h"
+
 
 #include "y.tab.h"
 
@@ -178,6 +180,14 @@ int main(int argc, char ** argv) {
             #endif
             yyparse(&program_root);
             analyse_tree(program_root);
+            if(check_program_tree(program_root))
+            {
+                printf("Ton arbre est bon! Youhouuuuuuuuuuu\n");
+            }
+            else
+            {
+                printf("Retourne bosser connard, ton code est nul\n");
+            }
             if(!stop_after_syntax)
             {
                 //analyse_passe_1(program_root);
@@ -193,7 +203,7 @@ int main(int argc, char ** argv) {
         }
         else
         {
-            printf("File given is inexistant\n");
+            printf("File given is inexistant or not in the current folder\n");
             exit(EXIT_FAILURE);
         }
     }

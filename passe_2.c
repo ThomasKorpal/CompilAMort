@@ -42,6 +42,11 @@ void analyse_passe2(node_t root)
     DFSp2(root);
 }
 
+int registerAllocator()
+{
+    
+}
+
 void DFSp2(node_t root)
 {
     if(root!=NULL)
@@ -103,33 +108,85 @@ void DFSp2(node_t root)
         {
             inst_stack_deallocation_create(root->offset + get_temporary_max_offset());
         }
-        if(root->nature == NODE_IF || root->nature == NODE_WHILE)
+        if(root->nature == NODE_IF)
         {
             
         }
-        if(root->nature == NODE_FOR || root->nature == NODE_DOWHILE)
+        if(root->nature ==  NODE_WHILE)
+        {
+
+        }
+        if(root->nature == NODE_FOR) 
         {
             
         }
-        if(root->nature == NODE_PLUS || root->nature == NODE_MINUS || root->nature == NODE_MUL || root->nature == NODE_DIV || root->nature == NODE_MOD)
+        if(root->nature == NODE_DOWHILE)
+        {
+
+        }
+        if(root->nature == NODE_PLUS)
         {
             
         }
-        if(root->nature == NODE_LT || root->nature == NODE_GT || root->nature == NODE_LE || root->nature == NODE_GE)
+        if(root->nature == NODE_MINUS)
+        {
+
+        }
+        if(root->nature == NODE_MUL)
         {
             
         }
-        if(root->nature == NODE_EQ || root->nature == NODE_NE)
+        if(root->nature == NODE_DIV)
+        {
+
+        }
+        if(root->nature == NODE_MOD)
+        {
+
+        }
+        if(root->nature == NODE_LT)
         {
             
         }
-        if(root->nature == NODE_AND || root->nature == NODE_OR)
+        if(root->nature == NODE_GT)
+        {
+
+        }
+        if(root->nature == NODE_LE)
+        {
+
+        }
+        if(root->nature == NODE_GE)
+        {
+
+        }
+        if(root->nature == NODE_EQ)
         {
             
         }
-        if(root->nature == NODE_BAND || root->nature == NODE_BOR || root->nature == NODE_BXOR)
+        if(root->nature == NODE_NE)
+        {
+
+        }
+        if(root->nature == NODE_AND)
         {
             
+        }
+        if(root->nature == NODE_OR)
+        {
+
+        }
+        if(root->nature == NODE_BAND)
+        {
+            
+        }
+        if(root->nature == NODE_BOR)
+        {
+
+        }
+        if(root->nature == NODE_BXOR)
+        {
+
         }
         if(root->nature == NODE_NOT)
         {
@@ -139,7 +196,15 @@ void DFSp2(node_t root)
         {
             
         }
-        if(root->nature == NODE_SLL || root->nature == NODE_SRL || root->nature == NODE_SRA)
+        if(root->nature == NODE_SLL)
+        {
+            
+        }
+        if(root->nature == NODE_SRL)
+        {
+
+        }
+        if(root->nature == NODE_SRA)
         {
             
         }

@@ -7,10 +7,6 @@
 
 int numLabel = 1;
 
-void DFSp2(node_t root);
-void addToData();
-int registerAllocator();
-
 void addToData()
 {
     int nb = get_global_strings_number();
@@ -22,6 +18,9 @@ void addToData()
 
 //En gros on va faire l'allocateur de registres, qui sera appelé lors des créations
 //d'instructions dans les 10000 if et l'analyse passe 2 sera appelée dans gen_code_passe_2
+
+//Va peut etre falloir changer l'organisation des fonctions 
+
 
 void gen_code_passe_2(node_t root) 
 {
@@ -44,11 +43,20 @@ void analyse_passe2(node_t root)
 
 int registerAllocator()
 {
-    
+    if(reg_available())
+    {
+        int reg = get_current_reg();
+        allocate_reg();
+    }
+    else
+    {
+
+    }
 }
 
 void DFSp2(node_t root)
 {
+    int reg1, reg2;
     if(root!=NULL)
     {    
         if(root->nature == NODE_PROGRAM)
@@ -138,7 +146,10 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_DIV)
         {
-
+            reg1 = registerAllocator();
+            reg2 = registerAllocator();
+            inst_div_create(reg1,reg2);
+            release_reg();
         }
         if(root->nature == NODE_MOD)
         {

@@ -24,7 +24,7 @@ if __name__ == '__main__':
     print(" - 5 = Verif/OK\n")
     print(" - 6 = Verif/KO\n")
     print(" - 7 = Tout\n")
-    code = input("Code : ")
+    code = input("\nCode : ")
     if code == 1:
         TestInDirectory("/home/thomas/Documents/projet_compilation_src/Tests/Gencode/OK")
     elif code == 2:

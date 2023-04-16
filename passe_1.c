@@ -33,6 +33,7 @@ void DFS(node_t root)
         if(root->nature == NODE_FUNC)
         {
             reset_env_current_offset();
+            global = false;
         }
         if(root->nature == NODE_DECLS)
         {
@@ -82,7 +83,6 @@ void DFS(node_t root)
                 else
                 {
                     printf("Error line %d: wrong type declared\n",root->lineno);
-                    printf("%d vs %d\n", root->opr[0]->type, root->opr[1]->type);
                     flagVerif = 1;
                 }
             }
@@ -124,11 +124,7 @@ void DFS(node_t root)
         {
             if(root->opr[0]->type==TYPE_VOID)
             {
-                if(!strcmp(root->opr[1]->ident, "main"))
-                {
-                    global = false;
-                }
-                else
+                if(strcmp(root->opr[1]->ident, "main"))
                 {
                     printf("Error line %d: function's name is not main\n",root->lineno);
                     flagVerif = 1;
@@ -171,7 +167,7 @@ void DFS(node_t root)
         {
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
-                printf("Error line %d: false condition\n",root->lineno);
+                printf("Error line %d: operator not working on non-int variables\n",root->lineno);
                 flagVerif = 1;
             }
             root->type = TYPE_BOOL;

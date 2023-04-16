@@ -1,4 +1,4 @@
 void main()
 {
-    c = a *;
+    a != ;
 }

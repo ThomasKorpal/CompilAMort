@@ -148,7 +148,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
 {COMMENTAIRE} {
 }
 
-[ \t\n\r]+
+[ \t\n]+
 
 . {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
@@ -180,14 +180,15 @@ int main(int argc, char ** argv) {
             #endif
             yyparse(&program_root);
             analyse_tree(program_root);
-            if(check_program_tree(program_root))
+            check_program_tree(program_root);
+            /*if(check_program_tree(program_root))
             {
                 printf("Ton arbre est bon! Youhouuuuuuuuuuu\n");
             }
             else
             {
                 printf("Retourne bosser connard, ton code est nul\n");
-            }
+            }*/
             if(!stop_after_syntax)
             {
                 //analyse_passe_1(program_root);

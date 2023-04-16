@@ -396,7 +396,7 @@ static const flex_int16_t yy_accept[89] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    4,    5,    6,    7,    7,    8,    9,    7,   10,
        11,   12,   13,   14,   15,    7,   16,   17,   18,   18,
@@ -2176,14 +2176,15 @@ int main(int argc, char ** argv) {
             #endif
             yyparse(&program_root);
             analyse_tree(program_root);
-            if(check_program_tree(program_root))
+            check_program_tree(program_root);
+            /*if(check_program_tree(program_root))
             {
                 printf("Ton arbre est bon! Youhouuuuuuuuuuu\n");
             }
             else
             {
                 printf("Retourne bosser connard, ton code est nul\n");
-            }
+            }*/
             if(!stop_after_syntax)
             {
                 //analyse_passe_1(program_root);

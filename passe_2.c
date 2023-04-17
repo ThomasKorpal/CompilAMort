@@ -47,9 +47,12 @@ int registerAllocator()
     {
         int reg = get_current_reg();
         allocate_reg();
+        return reg;
     }
     else
     {
+        int reg = get_current_reg();
+        push_temporary(reg);
 
     }
 }
@@ -61,7 +64,7 @@ void DFSp2(node_t root)
     {    
         if(root->nature == NODE_PROGRAM)
         {
-            inst_stack_allocation_create();
+            
         }
         if(root->nature == NODE_BLOCK)
         {
@@ -70,7 +73,9 @@ void DFSp2(node_t root)
         if(root->nature == NODE_FUNC)
         {
             set_temporary_start_offset(root->offset);
+            reset_temporary_max_offset();
             inst_text_sec_create();
+            inst_stack_allocation_create();
         }
         if(root->nature == NODE_DECLS)
         {
@@ -142,18 +147,25 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_MUL)
         {
-            
+            DFSp2(root->opr[0]);
+            reg1 = registerAllocator();
+            DFSp2(root->opr[1]);
+            inst_mult_create(reg1,get_current_reg());
         }
         if(root->nature == NODE_DIV)
         {
+            DFSp2(root->opr[0]);
             reg1 = registerAllocator();
-            reg2 = registerAllocator();
-            inst_div_create(reg1,reg2);
-            release_reg();
+            DFSp2(root->opr[1]);
+            inst_div_create(reg1,get_current_reg());
         }
         if(root->nature == NODE_MOD)
         {
-
+            DFSp2(root->opr[0]);
+            reg1 = registerAllocator();
+            DFSp2(root->opr[1]);
+            inst_div_create(reg1,get_current_reg());
+            inst_mfhi_create(reg1);
         }
         if(root->nature == NODE_LT)
         {

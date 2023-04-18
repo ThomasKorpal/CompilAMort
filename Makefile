@@ -62,6 +62,7 @@ clean:
 	@echo "| Cleaning .o files"
 	@rm -f *.o
 	@rm -f *.dot
+	@rm -f *.s
 
 realclean: clean
 	@echo "| Cleaning lex and yacc files, and executable"

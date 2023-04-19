@@ -11,6 +11,7 @@
 int numLabel = 1;
 int flag = 0;
 bool prem = true;
+int firstTimeFunc = 1;
 
 void addToData()
 {
@@ -282,6 +283,14 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
         case NODE_LIST:
         case NODE_DECLS:
         case NODE_DECL:
+            if(root->opr[0]->type == TYPE_INT || root->opr[0]->type == TYPE_BOOL) 
+            {
+                if(root->global_decl)
+                {
+                    inst_word_create(NULL,root->opr[0]->value);
+                }
+            }
+            break;
         case NODE_IDENT:
         case NODE_TYPE:
         case NODE_INTVAL:
@@ -290,6 +299,20 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
         case NODE_BOOLVAL:
         case NODE_STRINGVAL:
         case NODE_FUNC:
+            if(firstTimeFunc)
+            {
+                set_temporary_start_offset(root->offset);
+                reset_temporary_max_offset();
+                inst_text_sec_create();
+                inst_label_str_create("main");
+                inst_stack_allocation_create();
+                firstTimeFunc = 0;
+            }
+            else
+            {
+                inst_stack_deallocation_create(root->offset + get_temporary_max_offset());
+            }
+            break;
         case NODE_IF:
         case NODE_WHILE:
         case NODE_FOR:
@@ -318,12 +341,22 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
         case NODE_OR:
         case NODE_BAND:
         case NODE_BOR:
+            inst_or_create(reg_dest,reg_src1,reg_src2);
+            break;
         case NODE_BXOR:
+            inst_xor_create(reg_dest,reg_src1,reg_src2);
+            break;
         case NODE_NOT:
         case NODE_BNOT:
         case NODE_SLL:
+            inst_sllv_create(reg_dest,reg_src1,reg_src2);
+            break;
         case NODE_SRA:
+            inst_srav_create(reg_dest,reg_src1,reg_src2);
+            break;
         case NODE_SRL:
+            inst_srlv_create(reg_dest,reg_src1,reg_src2);
+            break;
         case NODE_UMINUS:
         case NODE_AFFECT:
         case NODE_PRINT:
@@ -354,6 +387,7 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
                         exit(EXIT_FAILURE);
                 }
             }
+            break;
         default:
     }
 }

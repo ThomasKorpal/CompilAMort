@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "defs.h"
@@ -271,188 +272,88 @@ void DFSp2(node_t root)
     }
 }
 
-void create_inst(node_t root, char* opcode, int reg_dest, int reg_src1, int reg_src2, int value_imm, int label, char* str)
+void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int label)
 {
     switch(root->nature)
     {
-
-    }
-    
-    //A REMPLACER CA SERT A RIEN 
-    if(!strcmp(opcode,"prgm"))
-    {
-
-    }
-    if(!strcmp(opcode,"blck"))
-    {
-
-    }
-    if(!strcmp(opcode,"list"))
-    {
-
-    }
-    if(!strcmp(opcode,"func"))
-    {
-
-    }
-    if(!strcmp(opcode,"dcls"))
-    {
-
-    }
-    if(!strcmp(opcode,"decl"))
-    {
-
-    }
-    if(!strcmp(opcode,"idnt"))
-    {
-
-    }
-    if(!strcmp(opcode,"type"))
-    {
-
-    }
-    if(!strcmp(opcode,"sval"))
-    {
-
-    }
-    if(!strcmp(opcode,"ifeu"))
-    {
-
-    }
-    if(!strcmp(opcode,"wile"))
-    {
-
-    }
-    if(!strcmp(opcode,"fore"))
-    {
-
-    }
-    if(!strcmp(opcode,"dwil"))
-    {
-
-    }
-    if(!strcmp(opcode,"plus"))
-    {
-        inst_addu_create(reg_dest,reg_src1,reg_src2);
-    }
-    if(!strcmp(opcode,"minu"))
-    {
-        inst_subu_create(reg_dest,reg_src1,reg_src2);
-    }
-    if(!strcmp(opcode,"dive"))
-    {
-        inst_div_create(reg_src1,reg_src2);
-    }
-    if(!strcmp(opcode,"mdul"))
-    {
-        inst_div_create(reg_src1,reg_src2);
-        inst_mfhi_create(reg_src1);
-    }
-    if(!strcmp(opcode,"lt"))
-    {
-
-    }
-    if(!strcmp(opcode,"gt"))
-    {
-
-    }
-    if(!strcmp(opcode,"le"))
-    {
-
-    }
-    if(!strcmp(opcode,"ge"))
-    {
-
-    }
-    if(!strcmp(opcode,"eq"))
-    {
-
-    }
-    if(!strcmp(opcode,"ne"))
-    {
-
-    }
-    if(!strcmp(opcode,"and"))
-    {
-
-    }
-    if(!strcmp(opcode,"or"))
-    {
-
-    }
-    if(!strcmp(opcode,"band"))
-    {
-
-    }
-    if(!strcmp(opcode,"bor"))
-    {
-
-    }
-    if(!strcmp(opcode,"bxor"))
-    {
-
-    }
-    if(!strcmp(opcode,"not"))
-    {
-
-    }
-    if(!strcmp(opcode,"bnot"))
-    {
-
-    }
-    if(!strcmp(opcode,"sll"))
-    {
-
-    }
-    if(!strcmp(opcode,"srl"))
-    {
-
-    }
-    if(!strcmp(opcode,"sra"))
-    {
-
-    }
-    if(!strcmp(opcode,"umin"))
-    {
-
-    }
-    if(!strcmp(opcode,"affe"))
-    {
-
-    }
-    if(!strcmp(opcode,"prnt"))
-    {
-        if(value_imm)
-        {
-            
-        }
-        if(str != NULL)
-        {
-            if(root->opr[0]->nature == NODE_STRINGVAL)
+        case NONE:
+        case NODE_PROGRAM:
+        case NODE_BLOCK:
+        case NODE_LIST:
+        case NODE_DECLS:
+        case NODE_DECL:
+        case NODE_IDENT:
+        case NODE_TYPE:
+        case NODE_INTVAL:
+            inst_addiu_create(reg_dest,reg_src1,root->value);
+            break;
+        case NODE_BOOLVAL:
+        case NODE_STRINGVAL:
+        case NODE_FUNC:
+        case NODE_IF:
+        case NODE_WHILE:
+        case NODE_FOR:
+        case NODE_DOWHILE:
+        case NODE_PLUS:
+            inst_addu_create(reg_dest,reg_src1,reg_src2);
+            break;
+        case NODE_MINUS:
+            inst_subu_create(reg_dest,reg_src1,reg_src2);
+            break;
+        case NODE_MUL:
+        case NODE_DIV:
+            inst_div_create(reg_src1,reg_src2);
+            break;
+        case NODE_MOD:
+            inst_div_create(reg_src1,reg_src2);
+            inst_mfhi_create(reg_src1);
+            break;
+        case NODE_LT:
+        case NODE_GT:
+        case NODE_LE:
+        case NODE_GE:
+        case NODE_EQ:
+        case NODE_NE:
+        case NODE_AND:
+        case NODE_OR:
+        case NODE_BAND:
+        case NODE_BOR:
+        case NODE_BXOR:
+        case NODE_NOT:
+        case NODE_BNOT:
+        case NODE_SLL:
+        case NODE_SRA:
+        case NODE_SRL:
+        case NODE_UMINUS:
+        case NODE_AFFECT:
+        case NODE_PRINT:
+            if(root->opr[0]->nature != NODE_IDENT || root->opr[0]->nature != NODE_STRINGVAL)
             {
-                inst_lui_create(4,get_data_sec_start_addr());
-                inst_ori_create(4,4,root->opr[0]->offset);
-                inst_ori_create(2,0,4);
-                inst_syscall_create();
-            }
-            if(root->opr[0]->nature == NODE_IDENT)
-            {
-                inst_lw_create(4,root->opr[0]->offset,29);
-                inst_ori_create(2,0,1);
-                inst_syscall_create();
+                
             }
             else
             {
-                //create_inst(root->opr[0])
+                switch(root->opr[0]->nature)
+                {
+                    case NODE_STRINGVAL:
+                        inst_lui_create(4,get_data_sec_start_addr());
+                        inst_ori_create(4,4,root->opr[0]->offset);
+                        inst_ori_create(2,0,4);
+                        inst_syscall_create();
+                        break;
+                    case NODE_IDENT:
+                        inst_lw_create(4,root->opr[0]->offset,29);
+                        inst_ori_create(2,0,1);
+                        inst_syscall_create();
+                        break;
+                    case NODE_INTVAL:
+                        printf("Error line %d : Wrong type given (int) in print function\n",root->lineno);
+                        exit(EXIT_FAILURE);
+                    default:
+                        printf("Error line %d : Wrong type given in print function\n",root->lineno);
+                        exit(EXIT_FAILURE);
+                }
             }
-        }
-    }
-    if(!strcmp(opcode,"ival"))
-    {
-        inst_addiu_create(reg_dest,reg_src1,value_imm);
-    }
-    if(!strcmp(opcode,"bval"))
-    {
-
+        default:
     }
 }

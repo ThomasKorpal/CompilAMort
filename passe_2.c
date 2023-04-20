@@ -324,6 +324,9 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
             inst_subu_create(reg_dest,reg_src1,reg_src2);
             break;
         case NODE_MUL:
+            inst_mult_create(reg_src1,reg_src2);
+            inst_mflo_create(reg_src1);
+            break;
         case NODE_DIV:
             inst_div_create(reg_src1,reg_src2);
             break;
@@ -347,7 +350,19 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
             inst_xor_create(reg_dest,reg_src1,reg_src2);
             break;
         case NODE_NOT:
+            if(root->opr[0]->type == TYPE_BOOL)
+            {
+                inst_xori_create(reg_dest,reg_src1,0x00000001);
+            }
+            else
+            {
+                printf("Error line %d : the not operator only work on boolean\n",root->lineno);
+                exit(EXIT_FAILURE);
+            }
+            break;
         case NODE_BNOT:
+            inst_xori_create(reg_dest,reg_src1,0xFFFFFFFF);
+            break;
         case NODE_SLL:
             inst_sllv_create(reg_dest,reg_src1,reg_src2);
             break;
@@ -358,6 +373,16 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
             inst_srlv_create(reg_dest,reg_src1,reg_src2);
             break;
         case NODE_UMINUS:
+            if(root->opr[0]->type == TYPE_INT)
+            {
+                inst_xori_create(reg_dest,reg_src1,0x80000000);
+            }
+            else
+            {
+                printf("Error line %d : the not operator only work on integers\n",root->lineno);
+                exit(EXIT_FAILURE);
+            }
+            break;
         case NODE_AFFECT:
         case NODE_PRINT:
             if(root->opr[0]->nature != NODE_IDENT || root->opr[0]->nature != NODE_STRINGVAL)

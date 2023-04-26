@@ -3,12 +3,10 @@ void main(){
     if(a<b){
         print("a<b");
     }
+    else if(a<c){
+        print("a<c");
+    }
     else{
-        if(a<c){
-            print("a<c");
-        }
-        else{
-            print(a);
-        }
+        print(a);
     }
 }

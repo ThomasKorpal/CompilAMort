@@ -88,7 +88,9 @@ void DFSp2(node_t root)
         {
             if(reg_available()){
                 if(root->decl_node->global_decl){
-                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_data_sec_start_addr());
+                    inst_lui_create(get_current_reg(),0x1001);
+                    inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
+                    //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                 }
                 else{
                     inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
@@ -100,7 +102,9 @@ void DFSp2(node_t root)
                 release_reg();
                 push_temporary(get_current_reg());
                 if(root->decl_node->global_decl){
-                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_data_sec_start_addr());
+                    inst_lui_create(get_current_reg(),0x1001);
+                    inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
+                    //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                 }
                 else{
                     inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
@@ -170,15 +174,32 @@ void DFSp2(node_t root)
         }
         if(root->nature ==  NODE_WHILE)
         {
-
+            //label while
+            int labelWHILE = numLabel++;
+            inst_label_create(labelWHILE);
+            DFSp2(root->opr[0]);//parcours de la condition
+            release_reg();
+            //si ca vaut 0 (false) jump label fin
+            int labelFIN = numLabel++;
+            inst_beq_create(get_current_reg(), get_r0(), labelFIN);
+            DFSp2(root->opr[1]);//parcours des instructions
+            inst_j_create(labelWHILE);
+            inst_label_create(labelFIN);
         }
         if(root->nature == NODE_FOR) 
         {
-            
+            DFSp2(root->opr[0]);//parcours de l'initialisation
         }
         if(root->nature == NODE_DOWHILE)
         {
-
+            //label while
+            int labelWHILE = numLabel++;
+            inst_label_create(labelWHILE);
+            DFSp2(root->opr[0]);//parcours des instructions
+            DFSp2(root->opr[1]);//parcours de la condition
+            //si ca vaut 1 (true) jump label while
+            release_reg();
+            inst_bne_create(get_current_reg(), get_r0(), labelWHILE);
         }
         if(root->nature == NODE_PLUS){
             for(int i=0; i<2; i++){
@@ -195,10 +216,13 @@ void DFSp2(node_t root)
                         allocate_reg();
                     }
                 }
-                if(root->opr[i]->nature == NODE_IDENT){
+                else if(root->opr[i]->nature == NODE_IDENT){
                     if(reg_available()){
                         if(root->opr[i]->decl_node->global_decl){
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
+                            printf("current reg : %d\noffset : %d", get_current_reg(),root->opr[i]->decl_node->offset);
+                            inst_lui_create(get_current_reg(),0x1001);
+                            inst_lw_create(get_current_reg(), root->opr[i]->decl_node->offset,get_current_reg());
+                            //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                         }
                         else{
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
@@ -210,7 +234,9 @@ void DFSp2(node_t root)
                         release_reg();
                         push_temporary(get_current_reg());
                         if(root->opr[i]->decl_node->global_decl){
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
+                            inst_lui_create(get_current_reg(),0x1001);
+                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset,get_current_reg());
+                            //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                         }
                         else{
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
@@ -263,7 +289,7 @@ void DFSp2(node_t root)
                         allocate_reg();
                     }
                 }
-                if(root->opr[i]->nature == NODE_IDENT){
+                else if(root->opr[i]->nature == NODE_IDENT){
                     if(reg_available()){
                         if(root->opr[i]->decl_node->global_decl){
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());

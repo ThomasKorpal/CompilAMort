@@ -1,7 +1,6 @@
-int b = 100;
+bool a = true;
 
 void main()
 {
-    b>>2;
-    b>>>1;
+    for(a= false; a == false; a=!a);
 }

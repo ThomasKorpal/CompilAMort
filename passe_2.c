@@ -115,6 +115,8 @@ void DFSp2(node_t root)
             DFSp2(root->opr[2]);
 
             inst_stack_deallocation_create(root->offset + get_temporary_max_offset());
+            inst_ori_create(2, get_r0(), 10);
+            inst_syscall_create();
         }
         if(root->nature == NODE_IF)
         {
@@ -133,7 +135,7 @@ void DFSp2(node_t root)
 
         }
         if(root->nature == NODE_PLUS){
-            printf("Node+\n");
+            //printf("Node+\n");
             for(int i=0; i<2; i++){
                 if(root->opr[i]->nature == NODE_INTVAL){
                     if(reg_available()){
@@ -183,7 +185,7 @@ void DFSp2(node_t root)
                 release_reg();
             }
             inst_addu_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
-            printf("%d\n",flag);
+            //printf("%d\n",flag);
         }
         if(root->nature == NODE_MINUS)
         {

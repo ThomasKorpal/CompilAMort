@@ -31,3 +31,5 @@ main:
     addu  $8, $9, $8
     sw    $8, 0($29)
     addiu $29, $29, 16
+    ori   $2, $0, 0xa
+    syscall

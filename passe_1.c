@@ -258,7 +258,7 @@ node_t make_node_global(node_nature nature, int64_t val, int32_t lineno)
     new_node->nature=nature;
     new_node->type = TYPE_NONE;
     new_node->offset = 0;
-    new_node->global_decl = false;
+    new_node->global_decl = true;
     new_node->opr = NULL;
     new_node->value=val; 
     new_node->ident = NULL;

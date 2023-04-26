@@ -48,7 +48,6 @@ void gen_code_passe_2(node_t root)
 
 void DFSp2(node_t root)
 {
-    int reg1, reg2;
     if(root!=NULL)
     {    
         if(root->nature == NODE_PROGRAM)
@@ -75,14 +74,13 @@ void DFSp2(node_t root)
         {   
             if(root->global_decl)//ajout dans le .data
             {
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!opérations!!!!!!!!!!
                 inst_word_create(root->opr[0]->ident,root->opr[1]->value);
             }
             else
             {
-                allocate_reg();
                 inst_ori_create(get_current_reg(),get_r0(),root->opr[1]->value);
                 inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
-                release_reg();
             }
         }
         if(root->nature == NODE_IDENT)
@@ -112,6 +110,7 @@ void DFSp2(node_t root)
             inst_text_sec_create();
             inst_label_str_create("main");
             inst_stack_allocation_create();
+            //printf("%d\n",get_current_reg());
 
             DFSp2(root->opr[2]);
 
@@ -134,30 +133,34 @@ void DFSp2(node_t root)
 
         }
         if(root->nature == NODE_PLUS){
+            printf("Node+\n");
             for(int i=0; i<2; i++){
-                if(root->opr[i]->node_nature == NODE_INTVAL){
+                if(root->opr[i]->nature == NODE_INTVAL){
                     if(reg_available()){
-                        allocate_reg();
                         inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
+                        allocate_reg();
                     }
                     else{
                         flag++;
+                        release_reg();
                         push_temporary(get_current_reg());
                         inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
+                        allocate_reg();
                     }
                 }
-                if(root->opr[i]->node_nature == NODE_IDENT){
+                if(root->opr[i]->nature == NODE_IDENT){
                     if(reg_available()){
-                        allocate_reg();
                         if(root->opr[i]->decl_node->global_decl){
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                         }
                         else{
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
                         }
+                        allocate_reg();
                     }
                     else{
                         flag++;
+                        release_reg();
                         push_temporary(get_current_reg());
                         if(root->opr[i]->decl_node->global_decl){
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
@@ -165,6 +168,7 @@ void DFSp2(node_t root)
                         else{
                             inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
                         }
+                        allocate_reg();
                     }
                 }
                 else{
@@ -172,13 +176,14 @@ void DFSp2(node_t root)
                 }
             }
             if(flag){
-                allocate_reg();
-                push_temporary();
-                inst_addu_create(...);
+                flag--;
+                pop_temporary(get_current_reg());
             }
             else{
-                inst_addu_create(...);
+                release_reg();
             }
+            inst_addu_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
+            printf("%d\n",flag);
         }
         if(root->nature == NODE_MINUS)
         {
@@ -264,9 +269,19 @@ void DFSp2(node_t root)
         {
             
         }
-        if(root->nature == NODE_AFFECT)
-        {
-            
+        if(root->nature == NODE_AFFECT){
+            DFSp2(root->opr[1]);
+            release_reg();
+            if(root->opr[0]->decl_node!=NULL){
+                if(root->opr[0]->decl_node->global_decl){
+                    inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_data_sec_start_addr());
+                }
+                else{
+                    inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_stack_reg());
+                }
+            }
+            if(get_current_reg()!=8)
+                release_reg(); 
         }
         if(root->nature == NODE_PRINT)
         {
@@ -301,6 +316,7 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
         case NODE_BOOLVAL:
         case NODE_STRINGVAL:
         case NODE_FUNC:
+            int firstTimeFunc=1;
             if(firstTimeFunc)
             {
                 set_temporary_start_offset(root->offset);

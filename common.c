@@ -172,10 +172,15 @@ void analyseArgs(int argc, char ** argv)
                 {
                     if(i+1 < argc)
                     {
-                        if(atoi(argv[i+1]) >= 4 && atoi(argv[i+1]) <= 8)
+                        if(atoi(argv[i+1]) >= 4 && atoi(argv[i+1]) <= 7)
+                        {
+                            set_max_registers(atoi(argv[i+1])+1);
+                        }
+                        else if (atoi(argv[i+1]) == 8)
                         {
                             set_max_registers(atoi(argv[i+1]));
                         }
+                        
                         else
                         {
                             printf("Argument given for -r out of range (between 4 and 8 included)\n");

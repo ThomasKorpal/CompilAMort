@@ -115,6 +115,10 @@ void DFS(node_t root)
                     exit(EXIT_FAILURE);
                 }
             }
+            else
+            {
+                root->decl_node = NULL;
+            }
         }
         if(root->nature == NODE_STRINGVAL)
         {
@@ -240,6 +244,11 @@ void DFS(node_t root)
             if(root->opr[0]->type != root->opr[1]->type)
             {
                 printf("Error line %d: wrong type (operator requires two operands of the same type)\n",root->lineno);
+                flagVerif = 1;
+            }
+            if(root->opr[0]->nature != NODE_IDENT)
+            {
+                printf("Error line %d: wrong assignation\n",root->lineno);
                 flagVerif = 1;
             }
             root->type = root->opr[0]->type;

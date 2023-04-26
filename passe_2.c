@@ -86,19 +86,45 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_IDENT)
         {
-            
+            if(reg_available()){
+                if(root->decl_node->global_decl){
+                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_data_sec_start_addr());
+                }
+                else{
+                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
+                }
+                allocate_reg();
+            }
+            else{
+                flag++;
+                release_reg();
+                push_temporary(get_current_reg());
+                if(root->decl_node->global_decl){
+                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_data_sec_start_addr());
+                }
+                else{
+                    inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
+                }
+                allocate_reg();
+            }
         }
         if(root->nature == NODE_TYPE)
         {
             
         }
-        if(root->nature == NODE_INTVAL)
+        if((root->nature == NODE_INTVAL) || (root->nature == NODE_BOOLVAL) )
         {
-            
-        }
-        if(root->nature == NODE_BOOLVAL)
-        {
-            
+            if(reg_available()){
+                inst_ori_create(get_current_reg(),get_r0(),root->value);
+                allocate_reg();
+            }
+            else{
+                flag++;
+                release_reg();
+                push_temporary(get_current_reg());
+                inst_ori_create(get_current_reg(),get_r0(),root->value);
+                allocate_reg();
+            }
         }
         if(root->nature == NODE_STRINGVAL)
         {
@@ -122,7 +148,25 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_IF)
         {
-            
+            DFSp2(root->opr[0]);//parcours de la condition
+            release_reg();
+            //si ca vaut 0 (false) jump label else
+            int labelELSE = numLabel++;
+            inst_beq_create(get_current_reg(), get_r0(), labelELSE);
+            DFSp2(root->opr[1]);//parcours des instructions
+            //jump label fin
+            int labelFIN;
+            if(root->nops==3){
+                labelFIN = numLabel++;
+                inst_j_create(labelFIN);
+            }
+            //label else
+            inst_label_create(labelELSE);
+            if(root->nops==3){
+                DFSp2(root->opr[2]);
+                //label fin
+                inst_label_create(labelFIN);
+            }
         }
         if(root->nature ==  NODE_WHILE)
         {
@@ -137,7 +181,6 @@ void DFSp2(node_t root)
 
         }
         if(root->nature == NODE_PLUS){
-            //printf("Node+\n");
             for(int i=0; i<2; i++){
                 if(root->opr[i]->nature == NODE_INTVAL){
                     if(reg_available()){
@@ -187,7 +230,6 @@ void DFSp2(node_t root)
                 release_reg();
             }
             inst_addu_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
-            //printf("%d\n",flag);
         }
         if(root->nature == NODE_MINUS)
         {
@@ -207,7 +249,55 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_LT)
         {
-            
+            for(int i=0; i<2; i++){
+                if(root->opr[i]->nature == NODE_INTVAL){
+                    if(reg_available()){
+                        inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
+                        allocate_reg();
+                    }
+                    else{
+                        flag++;
+                        release_reg();
+                        push_temporary(get_current_reg());
+                        inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
+                        allocate_reg();
+                    }
+                }
+                if(root->opr[i]->nature == NODE_IDENT){
+                    if(reg_available()){
+                        if(root->opr[i]->decl_node->global_decl){
+                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
+                        }
+                        else{
+                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
+                        }
+                        allocate_reg();
+                    }
+                    else{
+                        flag++;
+                        release_reg();
+                        push_temporary(get_current_reg());
+                        if(root->opr[i]->decl_node->global_decl){
+                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
+                        }
+                        else{
+                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
+                        }
+                        allocate_reg();
+                    }
+                }
+                else{
+                    DFSp2(root->opr[i]);
+                }
+            }
+            if(flag){
+                flag--;
+                pop_temporary(get_current_reg());
+            }
+            else{
+                release_reg();
+            }
+            inst_slt_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_GT)
         {
@@ -301,7 +391,7 @@ void print(node_t root){
     }
     else if(root->nature == NODE_IDENT){
         if(root->decl_node->global_decl){
-            printf("%d\n",get_data_sec_start_addr());
+            //printf("%d\n",get_data_sec_start_addr());
             inst_lui_create(4,0x1001);
             inst_lw_create(4,root->decl_node->offset,4);
         }

@@ -282,8 +282,6 @@ void DFSp2(node_t root)
                     inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_stack_reg());
                 }
             }
-            if(get_current_reg()!=8)
-                release_reg(); 
         }
         if(root->nature == NODE_PRINT)
         {
@@ -419,14 +417,18 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
                         inst_ori_create(2,0,4);
                         inst_syscall_create();
                         break;
-                    case NODE_IDENT:
-                        inst_lw_create(4,root->opr[0]->offset,29);
+                    case NODE_IDENT://vérifier ou c'est stocké
+                        if(root->global_decl)
+                        {
+                            inst_lw_create(4,root->opr[0]->offset,get_data_sec_start_addr());
+                        }
+                        else
+                        {
+                            inst_lw_create(4,root->opr[0]->offset,get_stack_reg());
+                        }
                         inst_ori_create(2,0,1);
                         inst_syscall_create();
                         break;
-                    case NODE_INTVAL:
-                        printf("Error line %d : Wrong type given (int) in print function\n",root->lineno);
-                        exit(EXIT_FAILURE);
                     default:
                         printf("Error line %d : Wrong type given in print function\n",root->lineno);
                         exit(EXIT_FAILURE);

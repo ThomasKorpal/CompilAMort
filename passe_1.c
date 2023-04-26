@@ -119,6 +119,7 @@ void DFS(node_t root)
             {
                 root->decl_node = NULL;
             }
+            root->global_decl = global;
         }
         if(root->nature == NODE_STRINGVAL)
         {

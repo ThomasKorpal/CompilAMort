@@ -12,6 +12,8 @@ int numLabel = 1;
 int flag = 0;
 bool prem = true;
 
+void print();
+
 void addToData()
 {
     int nb = get_global_strings_number();
@@ -24,7 +26,6 @@ void addToData()
 void gen_code_passe_2(node_t root) 
 {
     inst_data_sec_create();
-    addToData();
     DFSp2(root);
 }
 
@@ -105,6 +106,7 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_FUNC)
         {
+            addToData();
             set_temporary_start_offset(root->offset);
             reset_temporary_max_offset();
             inst_text_sec_create();
@@ -285,8 +287,33 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_PRINT)
         {
-            
+            print(root->opr[0]);
         }
+    }
+}
+
+void print(node_t root){
+    if(root->nature == NODE_STRINGVAL){
+        inst_lui_create(4,0x1001);
+        inst_ori_create(4,4,root->offset);
+        inst_ori_create(2,0,4);
+        inst_syscall_create();
+    }
+    else if(root->nature == NODE_IDENT){
+        if(root->decl_node->global_decl){
+            printf("%d\n",get_data_sec_start_addr());
+            inst_lui_create(4,0x1001);
+            inst_lw_create(4,root->decl_node->offset,4);
+        }
+        else{
+            inst_lw_create(4,root->decl_node->offset,get_stack_reg());
+        }
+        inst_ori_create(2,0,1);
+        inst_syscall_create();
+    }
+    else{
+        print(root->opr[0]);
+        print(root->opr[1]);
     }
 }
 
@@ -418,7 +445,7 @@ void create_inst(node_t root, int reg_dest, int reg_src1, int reg_src2, int labe
                         inst_syscall_create();
                         break;
                     case NODE_IDENT://vérifier ou c'est stocké
-                        if(root->global_decl)
+                        if(root->decl_node->global_decl)
                         {
                             inst_lw_create(4,root->opr[0]->offset,get_data_sec_start_addr());
                         }

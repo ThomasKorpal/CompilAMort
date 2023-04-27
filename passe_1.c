@@ -154,6 +154,8 @@ void DFS(node_t root)
                 flagVerif = 1;
             }
             root->offset = get_env_current_offset();
+            printf_level(5,"-èèèèèèèèèèèèy)SSSSSSSY++++++++++++++sqzzzzzzzzzzzzzz (mon chat est passé sur le clavier)\n");
+
         }
         if(root->nature == NODE_IF || root->nature == NODE_WHILE)
         {
@@ -301,14 +303,12 @@ node_t make_node_global(node_nature nature, int64_t val, int32_t lineno)
     new_node->str = NULL;
     new_node->lineno=lineno;
     //new_node->node_num=nbNode++;
-    printf_level(5,"Creating new global node of %s nature\n",node_nature2string(new_node->nature));
     return new_node;
 }
 
 void propaType(node_t root, node_type type)
 {
-    printf_level(5,"-èèèèèèèèèèèèy)SSSSSSSY++++++++++++++sqzzzzzzzzzzzzzz (mon chat est passé sur le clavier)\n");
-    printf_level(4,"Propagating types through the tree\n");
+    printf_level(4,"Propagating type %s through the tree\n",node_type2string(type));
     for(int i = 0; i < root->nops; i++)
     {
         if(root->opr[i]!=NULL)

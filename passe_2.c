@@ -7,25 +7,29 @@
 #include "passe_2.h"
 #include "utils/miniccutils.h"
 #include "arch.h"
+#include "common.h"
 
 int numLabel = 1;
 int flag = 0;
 bool prem = true;
 int Warning = 0;
+extern int trace_level;
 
 void print();
 void addToData();
 
 void gen_code_passe_2(node_t root) 
 {
+    printf_level(3,"Creating .data section of the assembly program\n");
     inst_data_sec_create();
+    printf_level(2,"Beginning code generation for every node\n");
     DFSp2(root);
 }
 
 void DFSp2(node_t root)
 {
     if(root!=NULL)
-    {    
+    {   printf_level(4,"Generating code for NODE_%s \n",node_nature2string(root->nature));
         if(root->nature == NODE_PROGRAM)
         {
             DFSp2(root->opr[0]);
@@ -51,6 +55,7 @@ void DFSp2(node_t root)
             if(root->opr[1]!=NULL){
                 if(root->global_decl){
                     inst_word_create(root->opr[0]->ident,root->opr[1]->value);
+                    printf_level(5,"Adding global variable %s to .data section with value %ld\n",root->opr[0]->ident,root->opr[1]->value);
                 }
                 else{
                     DFSp2(root->opr[1]);
@@ -104,9 +109,12 @@ void DFSp2(node_t root)
         if(root->nature == NODE_FUNC)
         {
             addToData();
+            printf_level(3,"Setting up temporary stack\n");
             set_temporary_start_offset(root->offset);
             reset_temporary_max_offset();
+            printf_level(3,"Creating .text section of the assembly program\n");
             inst_text_sec_create();
+            printf_level(2,"main label added\n");
             inst_label_str_create("main");
             inst_stack_allocation_create();
             //printf("%d\n",get_current_reg());
@@ -114,6 +122,7 @@ void DFSp2(node_t root)
             DFSp2(root->opr[2]);
 
             inst_stack_deallocation_create(root->offset + get_temporary_max_offset());
+            printf_level(3,"Setting up exit syscall (end of program)\n");
             inst_ori_create(2, get_r0(), 10);
             inst_syscall_create();
         }
@@ -617,8 +626,10 @@ void print(node_t root){
 void addToData()
 {
     int nb = get_global_strings_number();
+    printf_level(4,"Adding %d global strings to the .data section\n",nb);
     for(int i = 0; i < nb; i++)
     {
         inst_asciiz_create(NULL,get_global_string(i));
+        printf_level(5,"%s added to the .data section\n",get_global_string(i));
     }
 }

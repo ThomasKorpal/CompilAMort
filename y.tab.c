@@ -2159,6 +2159,7 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     }
     new_node->ident = NULL;
     new_node->str = NULL;
+
     return new_node;
 }
 
@@ -2297,12 +2298,15 @@ void analyse_tree(node_t root)
     if (!stop_after_syntax)
     {
         analyse_passe_1(root);
+        printf_lvl(1,"Tree analysis completed !\n");
         dump_tree(root, "apres_passe_1.dot");
         if (!stop_after_verif) 
         {
-            create_program(); 
+            create_program();
+            printf_lvl(1,"Starting the Turbo 5000 Pro Max code generator and beginning code creation...\n"); 
             gen_code_passe_2(root);
             dump_mips_program(outfile);
+            printf_lvl(1,"Code generated !\n"); 
             free_program();
         }
         free_global_strings();

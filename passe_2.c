@@ -73,21 +73,24 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_DECL)
         {   
-            if(root->global_decl)//ajout dans le .data
-            {
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!opérations!!!!!!!!!!
-                inst_word_create(root->opr[0]->ident,root->opr[1]->value);
-            }
-            else
-            {
-                inst_ori_create(get_current_reg(),get_r0(),root->opr[1]->value);
-                inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
+            if(root->opr[1]!=NULL){
+                if(root->global_decl)//ajout dans le .data
+                {
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!opérations!!!!!!!!!!
+                    inst_word_create(root->opr[0]->ident,root->opr[1]->value);
+                }
+                else
+                {
+                    inst_ori_create(get_current_reg(),get_r0(),root->opr[1]->value);
+                    inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
+                }
             }
         }
         if(root->nature == NODE_IDENT)
         {
             if(reg_available()){
                 if(root->decl_node->global_decl){
+                    printf("current reg : %d\noffset : %d\n", get_current_reg(), root->decl_node->offset);
                     inst_lui_create(get_current_reg(),0x1001);
                     inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
                     //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
@@ -111,10 +114,6 @@ void DFSp2(node_t root)
                 }
                 allocate_reg();
             }
-        }
-        if(root->nature == NODE_TYPE)
-        {
-            
         }
         if((root->nature == NODE_INTVAL) || (root->nature == NODE_BOOLVAL) )
         {
@@ -129,10 +128,6 @@ void DFSp2(node_t root)
                 inst_ori_create(get_current_reg(),get_r0(),root->value);
                 allocate_reg();
             }
-        }
-        if(root->nature == NODE_STRINGVAL)
-        {
-            //inst_asciiz_create(NULL,root->str);
         }
         if(root->nature == NODE_FUNC)
         {
@@ -188,7 +183,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_FOR) 
         {
-            DFSp2(root->opr[0]);//parcours de l'initialisation
+            if(root->opr[0]->nature == NODE_AFFECT){
+                DFSp2(root->opr[0]);//parcours de l'initialisation
+            }
+            //label for
+            int labelFOR = numLabel++;
+            inst_label_create(labelFOR);
+            DFSp2(root->opr[1]);//parcours de la condition
+            release_reg();
+            //si ca vaut 0 (false) jump label fin
+            int labelFIN = numLabel++;
+            inst_beq_create(get_current_reg(), get_r0(), labelFIN);
+            DFSp2(root->opr[3]);//parcours du bloc
+            DFSp2(root->opr[2]);//parcours de l'instruction
+            inst_j_create(labelFOR);
+            inst_label_create(labelFIN);
         }
         if(root->nature == NODE_DOWHILE)
         {

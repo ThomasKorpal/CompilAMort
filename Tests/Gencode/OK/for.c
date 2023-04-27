@@ -1,5 +1,5 @@
 void main(){
-    int a;
+    int a = 1;
     for(a=0;a<5;a=a+1){
         print(a," = a\n");
     }

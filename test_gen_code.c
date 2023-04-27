@@ -1,6 +1,7 @@
 void main(){
-    int a;
-    for(a=0;a<5;a=a+1){
+    int a = 0;
+    bool b;
+    for(a;a<5;a=a+1){
         print(a," = a\n");
     }
 }

@@ -195,7 +195,9 @@ void DFSp2(node_t root)
             int labelFIN = numLabel++;
             inst_beq_create(get_current_reg(), get_r0(), labelFIN);
             DFSp2(root->opr[3]);//parcours du bloc
-            DFSp2(root->opr[2]);//parcours de l'instruction
+            if(root->opr[2]->nature == NODE_AFFECT){
+                DFSp2(root->opr[2]);//parcours de l'instruction
+            }
             inst_j_create(labelFOR);
             inst_label_create(labelFIN);
         }

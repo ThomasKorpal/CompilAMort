@@ -155,8 +155,20 @@ void DFS(node_t root)
             if(root->opr[1]->type != TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
-                flagVerif = 1;
-                //Verif autres fils   
+                flagVerif = 1; 
+            }
+        }
+        if(root->nature == NODE_FOR)
+        {
+            if(root->opr[0]->nature != NODE_AFFECT && root->opr[0]->nature != NODE_IDENT && root->opr[0]->nature != NODE_INTVAL && root->opr[0]->nature != NODE_BOOLVAL)
+            {
+                printf("Error line %d: false first parameter\n",root->lineno);
+                flagVerif = 1;  
+            }
+            if(root->opr[2]->nature != NODE_AFFECT && root->opr[2]->nature != NODE_IDENT && root->opr[2]->nature != NODE_INTVAL && root->opr[2]->nature != NODE_BOOLVAL)
+            {
+                printf("Error line %d: false third parameter\n",root->lineno);
+                flagVerif = 1; 
             }
         }
         if(root->nature == NODE_PLUS || root->nature == NODE_MINUS || root->nature == NODE_MUL || root->nature == NODE_DIV || root->nature == NODE_MOD)

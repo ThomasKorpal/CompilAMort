@@ -23,7 +23,7 @@ int flagVerif = 0;
 
 void printf_lvl(int level, char* to_print)
 {
-    if(level < trace_level)
+    if(level <= trace_level)
     {
         printf("%s",to_print);
     }
@@ -56,7 +56,7 @@ void analyseArgs(int argc, char ** argv)
     {
         if(argc == 2)
         {
-            printf_level(5,"One argument detected\n");
+            printf_level(4,"One argument detected\n");
             if(!strcmp(argv[1],"-b"))
             {
                 printf("\n*****************************************************************************************\n");
@@ -84,6 +84,7 @@ void analyseArgs(int argc, char ** argv)
                 {
                     if(argv[1][strlen(argv[1])-1]=='c' && argv[1][strlen(argv[1])-2]=='.')
                     {
+                        printf_level(5,"Giving infile the name of the file\n");
                         fichierEntree = argv[1];
                     }
                     else
@@ -111,11 +112,23 @@ void analyseArgs(int argc, char ** argv)
                     fctUsage();
                     exit(EXIT_SUCCESS);
                 }
+                if(!strcmp(argv[i],"-t"))
+                {
+                    if(i+1 < argc)
+                    {
+                        if(atoi(argv[i+1]) >= 0 && atoi(argv[i+1]) <= 5)
+                        {
+                            trace_level = atoi(argv[i+1]);
+                        }
+                    }
+                }
             }
+            printf_level(4,"Multiple arguments detected\n");
             while(i < argc)
             {
                 if(!strcmp(argv[i],"-o"))
                 {
+                    printf_level(4,"-o argument detected\n");
                     if(i+1 < argc)
                     {
                         if(strlen(argv[i+1]) > 2)
@@ -123,6 +136,10 @@ void analyseArgs(int argc, char ** argv)
                             if(argv[i+1][strlen(argv[i+1])-1]=='s' && argv[i+1][strlen(argv[i+1])-2]=='.')
                             {
                                 outfile = argv[i+1];
+                                if(trace_level != 0)
+                                {
+                                    printf_level(5,"Giving the variable outfile the outfile's name\n");
+                                }
                             }
                             else
                             {
@@ -153,11 +170,13 @@ void analyseArgs(int argc, char ** argv)
                 }
                 if(!strcmp(argv[i],"-t"))
                 {
+                    printf_level(4,"-t argument detected\n");
                     if(i+1 < argc)
                     {
                         if(atoi(argv[i+1]) >= 0 && atoi(argv[i+1]) <= 5)
                         {
                             trace_level = atoi(argv[i+1]);
+                            printf_level(5,"Updating trace level to %d\n",atoi(argv[i+1]));
                         }
                         else
                         {
@@ -179,17 +198,19 @@ void analyseArgs(int argc, char ** argv)
                 }
                 if(!strcmp(argv[i],"-r"))
                 {
+                    printf_level(4,"-r argument detected\n");
                     if(i+1 < argc)
                     {
                         if(atoi(argv[i+1]) >= 4 && atoi(argv[i+1]) <= 7)
                         {
                             set_max_registers(atoi(argv[i+1])+1);
+                            printf_level(5,"Updating maximum registers to %d\n",atoi(argv[i+1]));
                         }
                         else if (atoi(argv[i+1]) == 8)
                         {
                             set_max_registers(atoi(argv[i+1]));
+                            printf_level(5,"Updating maximum registers to %d\n",atoi(argv[i+1]));
                         }
-                        
                         else
                         {
                             printf("Argument given for -r out of range (between 4 and 8 included)\n");
@@ -210,9 +231,11 @@ void analyseArgs(int argc, char ** argv)
                 }
                 if(!strcmp(argv[i],"-s"))
                 {
+                    printf_level(4,"-s argument detected\n");
                     if(!stop_after_verif)
                     {
                         stop_after_syntax = true;
+                        printf_level(5,"Parameter stop_after_syntax updated to true\n");
                     }
                     else
                     {
@@ -227,9 +250,11 @@ void analyseArgs(int argc, char ** argv)
                 }
                 if(!strcmp(argv[i],"-v"))
                 {
+                    printf_level(4,"-v argument detected\n");
                     if(!stop_after_syntax)
                     {
                         stop_after_verif = true;
+                        printf_level(5,"Parameter stop_after_verif updated to true\n");
                     }
                     else
                     {
@@ -251,6 +276,7 @@ void analyseArgs(int argc, char ** argv)
                 }
                 else
                 {
+                    printf_level(4,".c file found\n");
                     if(strlen(argv[i])>2)
                     {
                         if(cpt == 1)
@@ -258,6 +284,7 @@ void analyseArgs(int argc, char ** argv)
                             if(argv[i][strlen(argv[i])-1] == 'c' && argv[i][strlen(argv[i])-2] == '.')
                             {
                                 fichierEntree = argv[i];
+                                printf_level(4,"Updating infile with the .c file's name\n");
                                 cpt++;
                             }
                             else

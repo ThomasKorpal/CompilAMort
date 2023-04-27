@@ -182,7 +182,7 @@ int main(int argc, char ** argv) {
             yydebug = 1;
             #endif
             yyparse(&program_root);
-            printf_lvl(1,"Beginning analysis.. \n");
+            printf_lvl(1,"Beginning analysis...\n");
             analyse_tree(program_root);
             //check_program_tree(program_root);
             if(!stop_after_syntax)

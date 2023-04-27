@@ -4,6 +4,7 @@
 
 #include "defs.h"
 #include "passe_1.h"
+#include "common.h"
 #include "utils/miniccutils.h"
 
 extern int trace_level;
@@ -18,9 +19,9 @@ void analyse_passe_1(node_t root)
 {
     //parcours_arbre_offset_ident(root,trace_level);
     push_global_context();
-    //printf_level(3,"Beginning tree checking (phase 1)\n");
+    printf_level(3,"Beginning tree checking (phase 1)\n");
     DFS(root);
-    //printf_level(3,"Tree checking done (phase 1)\n");
+    printf_level(3,"Tree checking done (phase 1)\n");
 }
 
 void DFS(node_t root)
@@ -28,9 +29,11 @@ void DFS(node_t root)
     //printf("Node : line n° %d : %d\n",root->lineno,root->node_num);
     if(root!=NULL)
     {    
+        printf_level(4,"Line %d : NODE_%s\n",root->lineno,node_nature2string(root->nature));
         if(root->nature == NODE_BLOCK)
         {
             push_context();
+            
         }
         if(root->nature == NODE_FUNC)
         {
@@ -90,7 +93,7 @@ void DFS(node_t root)
                         flagVerif = 1;
                     }
                 }
-                else
+                else if(root->global_decl)
                 {
                     printf("Error line %d: only static affectation in global variable\n",root->lineno);
                     flagVerif = 1;
@@ -285,6 +288,7 @@ void DFS(node_t root)
 
 node_t make_node_global(node_nature nature, int64_t val, int32_t lineno)
 {
+    
     node_t new_node=malloc(sizeof(node_s));
     new_node->nops=0;
     new_node->nature=nature;
@@ -297,11 +301,14 @@ node_t make_node_global(node_nature nature, int64_t val, int32_t lineno)
     new_node->str = NULL;
     new_node->lineno=lineno;
     //new_node->node_num=nbNode++;
+    printf_level(5,"Creating new global node of %s nature\n",node_nature2string(new_node->nature));
     return new_node;
 }
 
 void propaType(node_t root, node_type type)
 {
+    printf_level(5,"-èèèèèèèèèèèèy)SSSSSSSY++++++++++++++sqzzzzzzzzzzzzzz (mon chat est passé sur le clavier)\n");
+    printf_level(4,"Propagating types through the tree\n");
     for(int i = 0; i < root->nops; i++)
     {
         if(root->opr[i]!=NULL)

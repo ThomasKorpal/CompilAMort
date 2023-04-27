@@ -1,4 +1,9 @@
+int a=2;
+
 void main(){
-    int a;
-    a = 1+(2+(3+(4+(5+(6+(7+(8+(9+10))))))));
+    int b=3, c=3;
+    bool a;
+    if(a = (b=2)  == (c=-1+c)){
+        print("Coucou\n");
+    }
 }

@@ -9,7 +9,7 @@
 
 
 #define printf_level(level, ...) ({         \
-    if (level < trace_level) {              \
+    if (level <= trace_level) {              \
         printf(__VA_ARGS__);                \
     }                                       \
 })

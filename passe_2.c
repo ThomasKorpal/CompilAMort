@@ -13,39 +13,13 @@ int flag = 0;
 bool prem = true;
 
 void print();
-
-void addToData()
-{
-    int nb = get_global_strings_number();
-    for(int i = 0; i < nb; i++)
-    {
-        inst_asciiz_create(NULL,get_global_string(i));
-    }
-}
+void addToData();
 
 void gen_code_passe_2(node_t root) 
 {
     inst_data_sec_create();
     DFSp2(root);
 }
-
-/*int registerAllocator()
-{
-    if(reg_available())
-    {
-        int reg = get_current_reg();
-        allocate_reg();
-        //printf("-l Allocating register %d\n",get_current_reg());
-        return reg;
-    }
-    else
-    {
-        int reg = get_current_reg();
-        flag = true;
-        push_temporary(reg);
-        return reg-1;                                               //???????????????????????????????????????????????????????????
-    }
-}*/
 
 void DFSp2(node_t root)
 {
@@ -74,14 +48,12 @@ void DFSp2(node_t root)
         if(root->nature == NODE_DECL)
         {   
             if(root->opr[1]!=NULL){
-                if(root->global_decl)//ajout dans le .data
-                {
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!opérations!!!!!!!!!!
-                    inst_word_create(root->opr[0]->ident,root->opr[1]->value);
+                DFSp2(root->opr[1]);
+                release_reg();
+                if(root->global_decl){
+                    inst_word_create(root->opr[0]->ident,get_current_reg());
                 }
-                else
-                {
-                    inst_ori_create(get_current_reg(),get_r0(),root->opr[1]->value);
+                else{
                     inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
                 }
             }
@@ -90,7 +62,6 @@ void DFSp2(node_t root)
         {
             if(reg_available()){
                 if(root->decl_node->global_decl){
-                    printf("current reg : %d\noffset : %d\n", get_current_reg(), root->decl_node->offset);
                     inst_lui_create(get_current_reg(),0x1001);
                     inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
                     //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
@@ -368,7 +339,8 @@ void DFSp2(node_t root)
             release_reg();
             if(root->opr[0]->decl_node!=NULL){
                 if(root->opr[0]->decl_node->global_decl){
-                    inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_data_sec_start_addr());
+                    inst_lui_create(4,0x1001);
+                    inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, 4);
                 }
                 else{
                     inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_stack_reg());
@@ -404,6 +376,15 @@ void print(node_t root){
     else{
         print(root->opr[0]);
         print(root->opr[1]);
+    }
+}
+
+void addToData()
+{
+    int nb = get_global_strings_number();
+    for(int i = 0; i < nb; i++)
+    {
+        inst_asciiz_create(NULL,get_global_string(i));
     }
 }
 

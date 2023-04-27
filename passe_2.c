@@ -203,7 +203,7 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_PLUS){
             for(int i=0; i<2; i++){
-                if(root->opr[i]->nature == NODE_INTVAL){
+                /*if(root->opr[i]->nature == NODE_INTVAL){
                     if(reg_available()){
                         inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
                         allocate_reg();
@@ -246,7 +246,8 @@ void DFSp2(node_t root)
                 }
                 else{
                     DFSp2(root->opr[i]);
-                }
+                }*/
+                DFSp2(root->opr[i]);
             }
             if(flag){
                 flag--;
@@ -255,7 +256,7 @@ void DFSp2(node_t root)
             else{
                 release_reg();
             }
-            inst_addu_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
+            inst_addu_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_MINUS)
         {
@@ -276,45 +277,7 @@ void DFSp2(node_t root)
         if(root->nature == NODE_LT)
         {
             for(int i=0; i<2; i++){
-                if(root->opr[i]->nature == NODE_INTVAL){
-                    if(reg_available()){
-                        inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
-                        allocate_reg();
-                    }
-                    else{
-                        flag++;
-                        release_reg();
-                        push_temporary(get_current_reg());
-                        inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
-                        allocate_reg();
-                    }
-                }
-                else if(root->opr[i]->nature == NODE_IDENT){
-                    if(reg_available()){
-                        if(root->opr[i]->decl_node->global_decl){
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
-                        }
-                        else{
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
-                        }
-                        allocate_reg();
-                    }
-                    else{
-                        flag++;
-                        release_reg();
-                        push_temporary(get_current_reg());
-                        if(root->opr[i]->decl_node->global_decl){
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
-                        }
-                        else{
-                            inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_stack_reg());
-                        }
-                        allocate_reg();
-                    }
-                }
-                else{
-                    DFSp2(root->opr[i]);
-                }
+                DFSp2(root->opr[i]);
             }
             if(flag){
                 flag--;

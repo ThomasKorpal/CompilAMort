@@ -48,12 +48,12 @@ void DFSp2(node_t root)
         if(root->nature == NODE_DECL)
         {   
             if(root->opr[1]!=NULL){
-                DFSp2(root->opr[1]);
-                release_reg();
                 if(root->global_decl){
-                    inst_word_create(root->opr[0]->ident,get_current_reg());
+                    inst_word_create(root->opr[0]->ident,root->opr[1]->value);
                 }
                 else{
+                    DFSp2(root->opr[1]);
+                    release_reg();
                     inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
                 }
             }

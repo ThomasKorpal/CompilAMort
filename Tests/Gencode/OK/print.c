@@ -1,4 +1,4 @@
-bool b = false;
+bool b = true;
 
 void main(){
     int a = 1;

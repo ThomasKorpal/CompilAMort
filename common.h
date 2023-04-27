@@ -14,6 +14,7 @@ const char * node_nature2string(node_nature t);
 const char * node_nature2symb(node_nature t);
 void analyseArgs(int argc, char ** argv);
 void fctUsage();
+void printf_lvl(int level, char* to_print);
 
 #endif
 

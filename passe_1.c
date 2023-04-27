@@ -18,7 +18,9 @@ void analyse_passe_1(node_t root)
 {
     //parcours_arbre_offset_ident(root,trace_level);
     push_global_context();
+    //printf_level(3,"Beginning tree checking (phase 1)\n");
     DFS(root);
+    //printf_level(3,"Tree checking done (phase 1)\n");
 }
 
 void DFS(node_t root)
@@ -75,18 +77,26 @@ void DFS(node_t root)
         {
             if(root->opr[1]!=NULL)
             {
-                if((root->opr[0]->type==root->opr[1]->type) && (root->opr[0]->type==TYPE_INT || root->opr[0]->type==TYPE_BOOL))
+                if(root->opr[1]->nature==NODE_INTVAL || root->opr[1]->nature==NODE_BOOLVAL)
                 {
-                    root->type = root->opr[0]->type;
-                    root->global_decl = global;
+                    if((root->opr[0]->type==root->opr[1]->type) && (root->opr[0]->type==TYPE_INT || root->opr[0]->type==TYPE_BOOL))
+                    {
+                        root->type = root->opr[0]->type;
+                        root->global_decl = global;
+                    }
+                    else
+                    {
+                        printf("Error line %d: wrong type declared\n",root->lineno);
+                        flagVerif = 1;
+                    }
                 }
                 else
                 {
-                    printf("Error line %d: wrong type declared\n",root->lineno);
+                    printf("Error line %d: only static affectation in global variable\n",root->lineno);
                     flagVerif = 1;
                 }
             }
-            else if(global)
+            else if(global && root->opr[1]==NULL)
             {
                 if(root->opr[0]->type==TYPE_INT)
                 {

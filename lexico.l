@@ -22,6 +22,7 @@ char * infile = NULL;
 char * outfile = DEFAULT_OUTFILE;
 bool stop_after_syntax = false;
 bool stop_after_verif = false;
+extern int trace_level;
 
 #if YYDEBUG
 extern int yydebug;
@@ -165,11 +166,13 @@ int yywrap(void) {
 int main(int argc, char ** argv) { 
     node_t program_root;
     analyseArgs(argc, argv);
+    printf_lvl(2,"Analysing of arguments done\n");
     if(!flagb)
     {
         // Poser question fichiers inexistant ou autre argument rentré
         if(!access(infile,F_OK))
         {
+            printf_lvl(4,"Opening .c file\n");
             yyin = fopen(infile, "r");
         #if LEX_DEBUG
             while(yylex());
@@ -179,16 +182,9 @@ int main(int argc, char ** argv) {
             yydebug = 1;
             #endif
             yyparse(&program_root);
+            printf_lvl(1,"Beginning analysis.. \n");
             analyse_tree(program_root);
-            check_program_tree(program_root);
-            /*if(check_program_tree(program_root))
-            {
-                printf("Ton arbre est bon! Youhouuuuuuuuuuu\n");
-            }
-            else
-            {
-                printf("Retourne bosser connard, ton code est nul\n");
-            }*/
+            //check_program_tree(program_root);
             if(!stop_after_syntax)
             {
                 //analyse_passe_1(program_root);

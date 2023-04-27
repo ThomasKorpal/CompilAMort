@@ -21,6 +21,14 @@ extern bool stop_after_verif;
 extern int flagb;
 int flagVerif = 0;
 
+void printf_lvl(int level, char* to_print)
+{
+    if(level < trace_level)
+    {
+        printf("%s",to_print);
+    }
+}
+
 void fctUsage()
 {
     printf("Usage : ./minicc [OPTIONS]\n\n");
@@ -48,6 +56,7 @@ void analyseArgs(int argc, char ** argv)
     {
         if(argc == 2)
         {
+            printf_level(5,"One argument detected\n");
             if(!strcmp(argv[1],"-b"))
             {
                 printf("\n*****************************************************************************************\n");
@@ -292,6 +301,7 @@ void analyseArgs(int argc, char ** argv)
         exit(EXIT_FAILURE);
     }
     infile = fichierEntree;
+    fclose(fopen(outfile,"w"));
 }
 
 void free_nodes(node_t n) {

@@ -52,12 +52,15 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_DECL)
         {   
-            if(root->opr[1]!=NULL){
-                if(root->global_decl){
+            if(root->opr[1]!=NULL)
+            {
+                if(root->global_decl)
+                {
                     inst_word_create(root->opr[0]->ident,root->opr[1]->value);
                     printf_level(5,"Adding global variable %s to .data section with value %ld\n",root->opr[0]->ident,root->opr[1]->value);
                 }
-                else{
+                else
+                {
                     DFSp2(root->opr[1]);
                     release_reg();
                     inst_sw_create(get_current_reg(), root->opr[0]->offset, get_stack_reg());
@@ -66,39 +69,47 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_IDENT)
         {
-            if(reg_available()){
-                if(root->decl_node->global_decl){
+            if(reg_available())
+            {
+                if(root->decl_node->global_decl)
+                {
                     inst_lui_create(get_current_reg(),0x1001);
                     inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
                     //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                 }
-                else{
+                else
+                {
                     inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
                 }
                 allocate_reg();
             }
-            else{
+            else
+            {
                 flag++;
                 release_reg();
                 push_temporary(get_current_reg());
-                if(root->decl_node->global_decl){
+                if(root->decl_node->global_decl)
+                {
                     inst_lui_create(get_current_reg(),0x1001);
                     inst_lw_create(get_current_reg(), root->decl_node->offset,get_current_reg());
                     //inst_lw_create(get_current_reg(),root->opr[i]->decl_node->offset, get_data_sec_start_addr());
                 }
-                else{
+                else
+                {
                     inst_lw_create(get_current_reg(),root->decl_node->offset, get_stack_reg());
                 }
                 allocate_reg();
             }
         }
-        if((root->nature == NODE_INTVAL) || (root->nature == NODE_BOOLVAL) )
+        if((root->nature == NODE_INTVAL) || (root->nature == NODE_BOOLVAL))
         {
-            if(reg_available()){
+            if(reg_available())
+            {
                 inst_ori_create(get_current_reg(),get_r0(),root->value);
                 allocate_reg();
             }
-            else{
+            else
+            {
                 flag++;
                 release_reg();
                 push_temporary(get_current_reg());
@@ -129,7 +140,8 @@ void DFSp2(node_t root)
         if(root->nature == NODE_IF)
         {
             DFSp2(root->opr[0]);//parcours de la condition
-            if(root->opr[0]->nature!=NODE_AFFECT){
+            if(root->opr[0]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             //si ca vaut 0 (false) jump label else
@@ -138,13 +150,15 @@ void DFSp2(node_t root)
             DFSp2(root->opr[1]);//parcours des instructions
             //jump label fin
             int labelFIN;
-            if(root->nops==3){
+            if(root->nops==3)
+            {
                 labelFIN = numLabel++;
                 inst_j_create(labelFIN);
             }
             //label else
             inst_label_create(labelELSE);
-            if(root->nops==3){
+            if(root->nops==3)
+            {
                 DFSp2(root->opr[2]);
                 //label fin
                 inst_label_create(labelFIN);
@@ -166,7 +180,8 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_FOR) 
         {
-            if(root->opr[0]->nature == NODE_AFFECT){
+            if(root->opr[0]->nature == NODE_AFFECT)
+            {
                 DFSp2(root->opr[0]);//parcours de l'initialisation
             }
             //label for
@@ -178,7 +193,8 @@ void DFSp2(node_t root)
             int labelFIN = numLabel++;
             inst_beq_create(get_current_reg(), get_r0(), labelFIN);
             DFSp2(root->opr[3]);//parcours du bloc
-            if(root->opr[2]->nature == NODE_AFFECT){
+            if(root->opr[2]->nature == NODE_AFFECT)
+            {
                 DFSp2(root->opr[2]);//parcours de l'instruction
             }
             inst_j_create(labelFOR);
@@ -197,10 +213,12 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_PLUS)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 /*if(root->opr[i]->nature == NODE_INTVAL){
                     if(reg_available()){
                         inst_ori_create(get_current_reg(),get_r0(),root->opr[i]->value);
@@ -247,45 +265,55 @@ void DFSp2(node_t root)
                 }*/
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_addu_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_MINUS)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_subu_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_MUL)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_mult_create(get_current_reg()-1, get_current_reg());
@@ -293,17 +321,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_DIV)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_div_create(get_current_reg()-1, get_current_reg());
@@ -312,17 +344,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_MOD)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_div_create(get_current_reg()-1, get_current_reg());
@@ -331,51 +367,63 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_LT)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_slt_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_GT)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_slt_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
         }
         if(root->nature == NODE_LE)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_slt_create(get_current_reg()-1, get_current_reg(), get_current_reg()-1);
@@ -383,17 +431,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_GE)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_slt_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
@@ -401,17 +453,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_EQ)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_xor_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
@@ -419,17 +475,21 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_NE)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_xor_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
@@ -437,122 +497,150 @@ void DFSp2(node_t root)
         }
         if(root->nature == NODE_AND || root->nature == NODE_BAND)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_and_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_OR || root->nature == NODE_BOR)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_or_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_BXOR)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_xor_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_NOT)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
             inst_xori_create(get_current_reg()-1, get_current_reg()-1, 1);
         }
         if(root->nature == NODE_BNOT)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
             inst_nor_create(get_current_reg()-1, get_r0(), get_current_reg()-1);
         }
         if(root->nature == NODE_SLL)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_sllv_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_SRL)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_srlv_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
         }
         if(root->nature == NODE_SRA)
         {
-            if(root->opr[0]->nature==NODE_AFFECT){
+            if(root->opr[0]->nature==NODE_AFFECT)
+            {
                 Warning++;
             }
-            for(int i=0; i<2; i++){
+            for(int i=0; i<2; i++)
+            {
                 DFSp2(root->opr[i]);
             }
-            if(flag){
+            if(flag)
+            {
                 flag--;
                 pop_temporary(get_current_reg());
             }
-            else if(root->opr[1]->nature!=NODE_AFFECT){
+            else if(root->opr[1]->nature!=NODE_AFFECT)
+            {
                 release_reg();
             }
             inst_srav_create(get_current_reg()-1, get_current_reg()-1, get_current_reg());
@@ -566,26 +654,34 @@ void DFSp2(node_t root)
         {
             //printf("%d\n", root->opr[1]->nature+18);
             DFSp2(root->opr[1]);
-            if(Warning){
+            if(Warning)
+            {
                 Warning--;
-                if(root->opr[0]->decl_node!=NULL){
-                    if(root->opr[0]->decl_node->global_decl){
+                if(root->opr[0]->decl_node!=NULL)
+                {
+                    if(root->opr[0]->decl_node->global_decl)
+                    {
                         inst_lui_create(4,0x1001);
                         inst_sw_create(get_current_reg()-1, root->opr[0]->decl_node->offset, 4);
                     }
-                    else{
+                    else
+                    {
                         inst_sw_create(get_current_reg()-1, root->opr[0]->decl_node->offset, get_stack_reg());
                     }
                 }
             }
-            else{
+            else
+            {
                 release_reg();
-                if(root->opr[0]->decl_node!=NULL){
-                    if(root->opr[0]->decl_node->global_decl){
+                if(root->opr[0]->decl_node!=NULL)
+                {
+                    if(root->opr[0]->decl_node->global_decl)
+                    {
                         inst_lui_create(4,0x1001);
                         inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, 4);
                     }
-                    else{
+                    else
+                    {
                         inst_sw_create(get_current_reg(), root->opr[0]->decl_node->offset, get_stack_reg());
                     }
                 }
@@ -598,26 +694,32 @@ void DFSp2(node_t root)
     }
 }
 
-void print(node_t root){
-    if(root->nature == NODE_STRINGVAL){
+void print(node_t root)
+{
+    if(root->nature == NODE_STRINGVAL)
+    {
         inst_lui_create(4,0x1001);
         inst_ori_create(4,4,root->offset);
         inst_ori_create(2,0,4);
         inst_syscall_create();
     }
-    else if(root->nature == NODE_IDENT){
-        if(root->decl_node->global_decl){
+    else if(root->nature == NODE_IDENT)
+    {
+        if(root->decl_node->global_decl)
+        {
             //printf("%d\n",get_data_sec_start_addr());
             inst_lui_create(4,0x1001);
             inst_lw_create(4,root->decl_node->offset,4);
         }
-        else{
+        else
+        {
             inst_lw_create(4,root->decl_node->offset,get_stack_reg());
         }
         inst_ori_create(2,0,1);
         inst_syscall_create();
     }
-    else{
+    else
+    {
         print(root->opr[0]);
         print(root->opr[1]);
     }

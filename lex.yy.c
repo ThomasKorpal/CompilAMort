@@ -2162,7 +2162,7 @@ int yywrap(void) {
 int main(int argc, char ** argv) { 
     node_t program_root;
     analyseArgs(argc, argv);
-    printf_lvl(2,"Analysing of arguments done\n");
+    printf_lvl(2,"Analyzing of arguments done\n");
     if(!flagb)
     {
         // Poser question fichiers inexistant ou autre argument rentré

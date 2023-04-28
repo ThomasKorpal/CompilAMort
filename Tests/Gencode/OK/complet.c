@@ -13,18 +13,26 @@ void main(){
 	bool context3 = false;
 
 	gINT1 = context1;//3 et non 1
+	print(gINT1);
 	gINT1 = context2;//2
+	print(gINT1);
 	gBOO1 = context3;//false et non true
+	print(gBOO1);
 	gBOO1 = context4;//false
+	print(gBOO1);
 
 	{
 		int context2 = 4;
 		bool context4 = true;
 
 		gINT1 = context1; //3 et non 1
+		print(gINT1);
 		gINT1 = context2; //4 et non 2
+		print(gINT1);
 		gBOO1 = context3; //false et non true
+		print(gBOO1);
 		gBOO1 = context4; //true et non false
+		print(gBOO1);
 	}
 
 	//test boucle for avec entier
@@ -35,97 +43,171 @@ void main(){
 	//test boucle for avec booleen
 	for(bool2=true; bool2!=bool3; i=i+1){
 		bool2 = false;
+		print("boucle for 2\n");
 	}
 
 	//test condition if
 	if(!bool2){
 		bool2 = true;
+		print(bool2);
 	}
 	else if(bool2 && (a==1 || b==1)){
 		entier1 = 0;
+		print(entier1);
 	}
 	else{
 		entier1 = 1;
+		print(entier1);
 	}
 
 	//test boucle while
 	while(bool2){
 		bool2 = false;
+		print(bool2);
 	}
 
 	//test boucle dowhile
 	do{
 		bool2 = true;
+		print(bool2);
 	}while(bool2==false);
 
 	//test sur le type de retour
 	entier1 = b - a + (-32 + entier2) / d * 0x2;
+	print(entier1);
 	entier1 = -entier2;
+	print(entier1);
 	entier1 = entier2 % ((d + a) % c);
+	print(entier1);
 	entier1 = a << (b << 1);
+	print(entier1);
 	entier1 =  a << 0x2;
+	print(entier1);
 	entier1 = entier2 >> 1;
+	print(entier1);
 	entier1 = entier2 >> 0x1;
+	print(entier1);
 	entier1 = entier2 >> a;
+	print(entier1);
 	entier1 = entier2 >>> 1;
+	print(entier1);
 	entier1 = entier2 >>> 0x1;
+	print(entier1);
 	entier1 = entier2 >>> a;
+	print(entier1);
 	bool1 = a < b;
+	print(bool1);
 	bool1 = a < 1;
+	print(bool1);
 	bool1 = 1 < b;
+	print(bool1);
 	bool1 = a < 0x1;
+	print(bool1);
 	bool1 = 0x1 < b;
+	print(bool1);
 	bool1 = a > b;
+	print(bool1);
 	bool1 = a > 1;
+	print(bool1);
 	bool1 = 1 > b;
+	print(bool1);
 	bool1 = a > 0x1;
+	print(bool1);
 	bool1 = 0x1 > b;
+	print(bool1);
 	bool1 = a <= b;
+	print(bool1);
 	bool1 = a <= 1;
+	print(bool1);
 	bool1 = 1 <= b;
+	print(bool1);
 	bool1 = a <= 0x1;
+	print(bool1);
 	bool1 = 0x1 <= b;
+	print(bool1);
 	bool1 = a >= b;
+	print(bool1);
 	bool1 = a >= 1;
+	print(bool1);
 	bool1 = 1 >= b;
+	print(bool1);
 	bool1 = a >= 0x1;
+	print(bool1);
 	bool1 = 0x1 >= b;
+	print(bool1);
 	entier1 = a & b;
+	print(entier1);
 	entier1 = a & 1;
+	print(entier1);
 	entier1 = 1 & b;
+	print(entier1);
 	entier1 = a & 0x1;
+	print(entier1);
 	entier1 = 0x1 & b;
+	print(entier1);
 	entier1 = a | b;
+	print(entier1);
 	entier1 = a | 1;
+	print(entier1);
 	entier1 = 1 | b;
+	print(entier1);
 	entier1 = a | 0x1;
+	print(entier1);
 	entier1 = 0x1 | b;
+	print(entier1);
 	entier1 = a ^ b;
+	print(entier1);
 	entier1 = a ^ 1;
+	print(entier1);
 	entier1 = 1 ^ b;
+	print(entier1);
 	entier1 = a ^ 0x1;
+	print(entier1);
 	entier1 = 0x1 ^ b;
+	print(entier1);
 	bool1 = bool2==bool3;
+	print(bool1);
 	bool1 = a==b;
+	print(bool1);
 	bool1 = a==1;
+	print(bool1);
 	bool1 = a==0x1;
+	print(bool1);
 	bool1 = 1==b;
+	print(bool1);
 	bool1 = 0x1==b;
+	print(bool1);
 	bool1 = bool2!=bool3;
+	print(bool1);
 	bool1 = bool2!=true;
+	print(bool1);
 	bool1 = bool2!=false;
+	print(bool1);
 	bool1 = true!=bool3;
+	print(bool1);
 	bool1 = false!=bool3;
+	print(bool1);
 	bool1 = a!=b;
+	print(bool1);
 	bool1 = a!=1;
+	print(bool1);
 	bool1 = a!=0x1;
+	print(bool1);
 	bool1 = 1!=b;
+	print(bool1);
 	bool1 = 0x1!=b;
+	print(bool1);
 	entier1 = ~entier2;
+	print(entier1);
 	entier1 = ~1;
+	print(entier1);
 	entier1 = ~0x1;
+	print(entier1);
 	bool1 = !bool2;
+	print(bool1);
 	bool1 = !true;
+	print(bool1);
 	bool1 = !false;
+	print(bool1);
 	print("Coucou, entier 1 = ", entier1, " et bool 1 = ", bool1, "\nFin test\n");
 }

@@ -349,7 +349,6 @@ void free_nodes(node_t n)
     
 }
 
-
 char * strdupl(char * s) {
     char * r = malloc(strlen(s) + 1);
     strcpy(r, s);

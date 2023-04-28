@@ -396,9 +396,13 @@ node_t make_node(node_nature nature, int nops, node_t enf1, node_t enf2)
     {
         new_node->opr[1]=enf2;
     }
+    else
+    {
+        new_node->opr[1]=NULL;
+    }
     new_node->ident = NULL;
     new_node->str = NULL;
-
+    new_node->decl_node = NULL;
     return new_node;
 }
 
@@ -420,8 +424,13 @@ node_t make_node_main_if(node_nature nature, int nops, node_t enf1, node_t enf2,
     {
         new_node->opr[2]=enf3;
     }
+    else
+    {
+        new_node->opr[2]=NULL;
+    }
     new_node->ident = NULL;
     new_node->str = NULL;
+    new_node->decl_node = NULL;
     return new_node;
 }
 
@@ -443,6 +452,7 @@ node_t make_node_for(node_nature nature, int nops, node_t enf1, node_t enf2, nod
     new_node->opr[3]=enf4;
     new_node->ident = NULL;
     new_node->str = NULL;
+    new_node->decl_node = NULL;
     return new_node;
 }
 

@@ -13,18 +13,26 @@ void main(){
 	bool context3 = false;
 
 	gINT1 = context1;//3 et non 1
+	print(gINT1);
 	gINT1 = context2;//2
+	print(gINT1);
 	gBOO1 = context3;//false et non true
+	print(gBOO1);
 	gBOO1 = context4;//false
+	print(gBOO1);
 
 	{
 		int context2 = 4;
 		bool context4 = true;
 
 		gINT1 = context1; //3 et non 1
+		print(gINT1);
 		gINT1 = context2; //4 et non 2
+		print(gINT1);
 		gBOO1 = context3; //false et non true
+		print(gBOO1);
 		gBOO1 = context4; //true et non false
+		print(gBOO1);
 	}
 
 	//test boucle for avec entier
@@ -35,27 +43,33 @@ void main(){
 	//test boucle for avec booleen
 	for(bool2=true; bool2!=bool3; i=i+1){
 		bool2 = false;
+		print("boucle for 2\n");
 	}
 
 	//test condition if
 	if(!bool2){
 		bool2 = true;
+		print(bool2);
 	}
 	else if(bool2 && (a==1 || b==1)){
 		entier1 = 0;
+		print(entier1);
 	}
 	else{
 		entier1 = 1;
+		print(entier1);
 	}
 
 	//test boucle while
 	while(bool2){
 		bool2 = false;
+		print(bool2);
 	}
 
 	//test boucle dowhile
 	do{
 		bool2 = true;
+		print(bool2);
 	}while(bool2==false);
 
 	//test sur le type de retour

@@ -331,8 +331,22 @@ void analyseArgs(int argc, char ** argv)
     fclose(fopen(outfile,"w"));
 }
 
-void free_nodes(node_t n) {
-    // A implementer
+void free_nodes(node_t n) 
+{
+    if(n != NULL)
+    {
+        for(int i = 0 ; i < n->nops ; i++)
+        {
+            if(n->opr[i] != NULL)
+            {
+                //printf("(Passage) nature : %s\n",node_nature2string(n->nature));
+                free_nodes(n->opr[i]);
+            }
+        }
+        //printf("(Free) nature : %s\n",node_nature2string(n->nature));
+        free(n);
+    }
+    
 }
 
 

@@ -1,4 +1,8 @@
+int a = 1;
+
 void main()
 {
-    print("");
+    int b = 2 + a;
+    print(b,"\n");
+    print("Coucou\n");
 }

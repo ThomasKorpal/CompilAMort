@@ -112,6 +112,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                     if(strlen(yytext)>10)
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
                         exit(EXIT_FAILURE);
                     }
                     else
@@ -128,6 +129,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                     else
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
                         yylval.intval = 0xFFFFFFFF;
                         //flagb=1;
                         exit(EXIT_FAILURE);

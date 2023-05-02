@@ -1,5 +1,5 @@
 //Declaration de variables globales
-int gINT1, gINT2 = 20, gINT3=5, gINT4 = 0x0FFFFFFF, gINT5=0xA;
+int gINT1, gINT2 = 20, gINT3=5, gINT4 = 0x0FFFFFFE, gINT5=0xA;
 bool gBOO1, gBOO2 = true, gBOO3=false;
 int context1 = 1, context2 = 2;
 bool context3 = true, context4 = false;

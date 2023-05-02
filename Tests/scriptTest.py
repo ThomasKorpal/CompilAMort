@@ -4,9 +4,9 @@ import subprocess
 directs = os.listdir(os.curdir)
 list_dir_to_test = []
 
-def createTestPathsLists():
+def createTestPathsList():
     for dir in directs:
-        if dir != "script.py" and dir != "out.s" and dir != "apres_passe_1.dot" and dir != "apres_syntaxe.dot":
+        if dir != "script.py":
             for type_dir in os.listdir(os.curdir+"/"+dir):
                 path = os.curdir+"/"+dir+"/"+type_dir
                 list_dir_to_test.append(path)
@@ -21,7 +21,13 @@ def TestInDirectory(directory):
     for filename in os.listdir(directory): #Problème sur le directory, il prend tout le dossier Tests
         f = os.path.join(directory,filename)
         if os.path.isfile(f) and f.endswith(".c"):
-            result = subprocess.run([".././minicc",f],capture_output=True)
+            if directory.endswith("Syntaxe/OK") or directory.endswith("Syntaxe/KO"):
+                result = subprocess.run([".././minicc",f,"-s"],capture_output=True)
+            if directory.endswith("Verif/OK") or directory.endswith("Verif/KO"):
+                result = subprocess.run([".././minicc",f,"-v"],capture_output=True)
+            else:
+                result = subprocess.run([".././minicc",f],capture_output=True)
+            #print(filename+": "+str(result.stderr))
             if(str(result.stderr) != str(b'')):
                 cpt += 1
                 bufferFichier.append(filename)
@@ -47,7 +53,7 @@ def TestInDirectory(directory):
                     errTemp = err
         if(cpt == 0):
             if directory.endswith("Gencode/KO"):
-                print("Il n'y a pas eu d'erreur dans le repertoire "+directory+" lors de la compilation, il faut vérifier sur Mars la sortie\n")
+                print("Il n'y a pas eu d'erreur dans le repertoire "+directory+" lors de la compilation, il faut vérifier sur Mars la sortie des fichiers assembleurs\n")
             else:
                 print("Il n'y a pas eu d'erreur dans le repertoire "+directory+", ce qui n'est pas normal je crois ...\n")
         elif(cpt < len(os.listdir(directory))):
@@ -74,7 +80,7 @@ def removeGarbage():
 
 if __name__ == '__main__':
 
-    createTestPathsLists()
+    createTestPathsList()
     print("***  Programme d'automatisation des tests écrits pour le projet compilation  ***")
     print("***              Programme écrit par Thomas Korpal & Hugo Vouaux             ***\n")
     print("Le programme va passer dans tous les repertoires de test et executer chaque fichier")

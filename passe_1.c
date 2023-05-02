@@ -54,6 +54,7 @@ void DFS(node_t root)
             else
             {
                 printf("Error line %d: variable already declared\n",root->lineno);
+                fprintf(stderr,"Error line %d: variable already declared\n",root->lineno);
                 exit(EXIT_FAILURE);
             }
         }
@@ -73,7 +74,9 @@ void DFS(node_t root)
             if(root->opr[0]->type == TYPE_VOID)
             {
                 printf("Error line %d: variable can not be of type void\n",root->lineno);
+                fprintf(stderr,"Error line %d: variable can not be of type void\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
         }
         if(root->nature == NODE_DECL)
@@ -90,13 +93,17 @@ void DFS(node_t root)
                     else
                     {
                         printf("Error line %d: wrong type declared\n",root->lineno);
+                        fprintf(stderr,"Error line %d: wrong type declared\n",root->lineno);
                         flagVerif = 1;
+                        exit(EXIT_FAILURE);
                     }
                 }
                 else if(root->global_decl)
                 {
                     printf("Error line %d: only static affectation in global variable\n",root->lineno);
+                    fprintf(stderr,"Error line %d: only static affectation in global variable\n",root->lineno);
                     flagVerif = 1;
+                    exit(EXIT_FAILURE);
                 }
             }
             else if(global && root->opr[1]==NULL)
@@ -125,6 +132,7 @@ void DFS(node_t root)
                 if(node_pt != root)
                 {
                     printf("Error line %d: non existing variable\n",root->lineno);
+                    fprintf(stderr,"Error line %d: non existing variable\n",root->lineno);
                     exit(EXIT_FAILURE);
                 }
             }
@@ -145,13 +153,17 @@ void DFS(node_t root)
                 if(strcmp(root->opr[1]->ident, "main"))
                 {
                     printf("Error line %d: function's name is not main\n",root->lineno);
+                    fprintf(stderr,"Error line %d: function's name is not main\n",root->lineno);
                     flagVerif = 1;
+                    exit(EXIT_FAILURE);
                 }
             }
             else
             {
                 printf("Error line %d: function's type is not void\n",root->lineno);
+                fprintf(stderr,"Error line %d: function's type is not void\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->offset = get_env_current_offset();
             printf_level(5,"-èèèèèèèèèèèèy)SSSSSSSY++++++++++++++sqzzzzzzzzzzzzzz (mon chat est passé sur le clavier)\n");
@@ -162,7 +174,9 @@ void DFS(node_t root)
             if(root->opr[0]->type!=TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                fprintf(stderr,"Error line %d: false condition\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
         }
         if(root->nature == NODE_FOR || root->nature == NODE_DOWHILE)
@@ -170,7 +184,9 @@ void DFS(node_t root)
             if(root->opr[1]->type != TYPE_BOOL)
             {
                 printf("Error line %d: false condition\n",root->lineno);
-                flagVerif = 1; 
+                fprintf(stderr,"Error line %d: false condition\n",root->lineno);
+                flagVerif = 1;
+                exit(EXIT_FAILURE); 
             }
         }
         if(root->nature == NODE_FOR)
@@ -178,12 +194,16 @@ void DFS(node_t root)
             if(root->opr[0]->nature != NODE_AFFECT && root->opr[0]->nature != NODE_IDENT && root->opr[0]->nature != NODE_INTVAL && root->opr[0]->nature != NODE_BOOLVAL)
             {
                 printf("Error line %d: false first parameter\n",root->lineno);
-                flagVerif = 1;  
+                fprintf(stderr,"Error line %d: false first parameter\n",root->lineno);
+                flagVerif = 1;
+                exit(EXIT_FAILURE);  
             }
             if(root->opr[2]->nature != NODE_AFFECT && root->opr[2]->nature != NODE_IDENT && root->opr[2]->nature != NODE_INTVAL && root->opr[2]->nature != NODE_BOOLVAL)
             {
                 printf("Error line %d: false third parameter\n",root->lineno);
-                flagVerif = 1; 
+                fprintf(stderr,"Error line %d: false third parameter\n",root->lineno);
+                flagVerif = 1;
+                exit(EXIT_FAILURE); 
             }
         }
         if(root->nature == NODE_PLUS || root->nature == NODE_MINUS || root->nature == NODE_MUL || root->nature == NODE_DIV || root->nature == NODE_MOD)
@@ -191,7 +211,9 @@ void DFS(node_t root)
             if(!(root->opr[0]->type == TYPE_INT && root->opr[1]->type == TYPE_INT))
             {
                 printf("Error line %d: operator not working on non-int variables\n",root->lineno);
+                fprintf(stderr,"Error line %d: operator not working on non-int variables\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_INT;
         }
@@ -200,7 +222,9 @@ void DFS(node_t root)
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
                 printf("Error line %d: operator not working on non-int variables\n",root->lineno);
+                fprintf(stderr,"Error line %d: operator not working on non-int variables\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_BOOL;
         }
@@ -209,7 +233,9 @@ void DFS(node_t root)
             if((root->opr[0]->type!=root->opr[1]->type) || (root->opr[0]->type == TYPE_VOID) || (root->opr[0]->type == TYPE_NONE))
             {
                 printf("Error line %d: false condition\n",root->lineno);
+                fprintf(stderr,"Error line %d: false condition\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_BOOL;
         }
@@ -218,7 +244,9 @@ void DFS(node_t root)
             if(!(root->opr[0]->type == TYPE_BOOL && root->opr[1]->type == TYPE_BOOL))
             {
                 printf("Error line %d: wrong type (operator requires boolean)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires boolean)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_BOOL;
         }
@@ -227,7 +255,9 @@ void DFS(node_t root)
             if(root->opr[0]->type != TYPE_INT || root->opr[1]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires boolean)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_INT;
         }
@@ -236,7 +266,9 @@ void DFS(node_t root)
             if(root->opr[0]->type != TYPE_BOOL)
             {
                 printf("Error line %d: wrong type (operator requires boolean)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires boolean)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_BOOL;
         }
@@ -245,7 +277,9 @@ void DFS(node_t root)
             if(root->opr[0]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires integer)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_INT;
         }
@@ -254,7 +288,9 @@ void DFS(node_t root)
             if((root->opr[0]->type != TYPE_INT) || (root->opr[1]->type != TYPE_INT))
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires integer)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_INT;
         }
@@ -263,7 +299,9 @@ void DFS(node_t root)
             if(root->opr[0]->type != TYPE_INT)
             {
                 printf("Error line %d: wrong type (operator requires integer)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires integer)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = TYPE_INT;
         }
@@ -272,12 +310,16 @@ void DFS(node_t root)
             if(root->opr[0]->type != root->opr[1]->type)
             {
                 printf("Error line %d: wrong type (operator requires two operands of the same type)\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong type (operator requires two operands of the same type)\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             if(root->opr[0]->nature != NODE_IDENT)
             {
                 printf("Error line %d: wrong assignation\n",root->lineno);
+                fprintf(stderr,"Error line %d: wrong assignation\n",root->lineno);
                 flagVerif = 1;
+                exit(EXIT_FAILURE);
             }
             root->type = root->opr[0]->type;
         }
@@ -334,7 +376,9 @@ void verifprint(node_t root)
         if(root->nature!=NODE_IDENT && root->nature!=NODE_STRINGVAL)
         {
             printf("Error line %d: wrong type in print, only string or ident\n",root->lineno);
+            fprintf(stderr,"Error line %d: wrong type in print, only string or ident\n",root->lineno);
             flagVerif = 1;
+            exit(EXIT_FAILURE);
         }
     }
 }

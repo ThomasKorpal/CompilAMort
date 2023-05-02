@@ -1073,6 +1073,7 @@ YY_RULE_SETUP
                     if(strlen(yytext)>10)
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
                         exit(EXIT_FAILURE);
                     }
                     else
@@ -1089,6 +1090,7 @@ YY_RULE_SETUP
                     else
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
                         yylval.intval = 0xFFFFFFFF;
                         //flagb=1;
                         exit(EXIT_FAILURE);
@@ -1101,7 +1103,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 141 "lexico.l"
+#line 143 "lexico.l"
 {
                 #if !LEX_DEBUG
                 /* A completer : affecter yylval.strval */
@@ -1112,19 +1114,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 149 "lexico.l"
+#line 151 "lexico.l"
 {
 }
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 152 "lexico.l"
+#line 154 "lexico.l"
 
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 154 "lexico.l"
+#line 156 "lexico.l"
 {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
                 exit(1);
@@ -1132,10 +1134,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 160 "lexico.l"
+#line 162 "lexico.l"
 ECHO;
 	YY_BREAK
-#line 1139 "lex.yy.c"
+#line 1141 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2152,7 +2154,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 160 "lexico.l"
+#line 162 "lexico.l"
 
 
 int yywrap(void) {

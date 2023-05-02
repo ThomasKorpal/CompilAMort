@@ -6,7 +6,7 @@ list_dir_to_test = []
 
 def createTestPathsList():
     for dir in directs:
-        if dir != "script.py":
+        if dir != "scriptTest.py":
             for type_dir in os.listdir(os.curdir+"/"+dir):
                 path = os.curdir+"/"+dir+"/"+type_dir
                 list_dir_to_test.append(path)
@@ -67,8 +67,6 @@ def TestInDirectory(directory):
             else:
                 print("Les tests ont été correctement passés dans le repertoire "+directory)
                 print("")
-    bufferFichier.clear()
-    bufferErreur.clear()
 
 def removeGarbage():
     if "apres_passe_1.dot" in os.listdir(os.curdir):

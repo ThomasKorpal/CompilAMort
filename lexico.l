@@ -112,7 +112,7 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                     if(strlen(yytext)>10)
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
-                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : syntax error\n", yylineno);
                         exit(EXIT_FAILURE);
                     }
                     else
@@ -122,14 +122,14 @@ COMMENTAIRE     "//"{CHAINE_CAR}*
                 }
                 else
                 {
-                    if(atoi(yytext)<2147483648)
+                    if(atoi(yytext)<4294967295)
                     {
                         yylval.intval = atoi(yytext);
                     }
                     else
                     {
                         printf("Error line %d : int out of 32 bits range\n", yylineno);
-                        fprintf(stderr,"Error line %d : int out of 32 bits range\n", yylineno);
+                        fprintf(stderr,"Error line %d : syntax error\n", yylineno);
                         yylval.intval = 0xFFFFFFFF;
                         //flagb=1;
                         exit(EXIT_FAILURE);

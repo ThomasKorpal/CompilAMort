@@ -1,5 +1,6 @@
 import os 
 import subprocess
+from colorama import Fore, Back, Style
 
 directs = os.listdir(os.curdir)
 list_dir_to_test = []
@@ -12,7 +13,7 @@ def createTestPathsList():
                 list_dir_to_test.append(path)
 
 def TestInDirectory(directory):
-    print(directory)
+    print(Style.BRIGHT+directory+Style.RESET_ALL)
     cpt = 0
     flagSyn = False
     errTemp = ""
@@ -28,21 +29,33 @@ def TestInDirectory(directory):
             else:
                 result = subprocess.run([".././minicc",f],capture_output=True)
             #print(filename+": "+str(result.stderr))
-            if(str(result.stderr) != str(b'')):
+            if str(result.stderr) != str(b''):
                 cpt += 1
                 bufferFichier.append(filename)
                 bufferErreur.append(result.stderr)
+                if directory.endswith("KO"):
+                    if directory.endswith("Syntaxe/KO"):
+                        if str(result.stderr).split(": ")[1].split(" ")[0] != "syntax":
+                            print(Fore.RED + filename+" : "+str(result.stderr).split("'")[1]+Style.RESET_ALL)
+                        else:
+                            print(Fore.GREEN + filename+" : "+str(result.stderr).split("'")[1]+Style.RESET_ALL)
+                    else:
+                        print(Fore.GREEN + filename+" : "+str(result.stderr).split("'")[1]+Style.RESET_ALL)
+                else:
+                    print(Fore.RED + filename+" : "+str(result.stderr).split("'")[1]+Style.RESET_ALL)
+            else:
+                print(Fore.GREEN + filename+" : No error at execution"+Style.RESET_ALL)
 
     if directory.endswith("OK"):
-        if(cpt != 0):
-            print("Pour le repertoire "+directory+", le test à échoué à cause du (ou des) fichier(s) suivant(s) : ")
+        if cpt != 0:
+            print(Back.RED+"Pour le repertoire "+directory+", le test à échoué à cause du (ou des) fichier(s) suivant(s) : "+Style.RESET_ALL)
             i = 0
             for f in bufferFichier:
-                print(f+": "+str(bufferErreur[i]).split("'")[1])
+                print(Fore.RED+f+": "+str(bufferErreur[i]).split("'")[1]+Style.RESET_ALL)
                 i+=1
             print("\n")
         else:
-            print("Les tests ont été correctement passés dans le repertoire "+directory)
+            print(Back.GREEN+"Les tests ont été correctement passés dans le repertoire "+directory+Style.RESET_ALL)
             print("")
 
     if directory.endswith("KO"):
@@ -51,21 +64,21 @@ def TestInDirectory(directory):
                 if b"syntax" not in err:
                     flagSyn = True
                     errTemp = err
-        if(cpt == 0):
+        if cpt == 0:
             if directory.endswith("Gencode/KO"):
-                print("Il n'y a pas eu d'erreur dans le repertoire "+directory+" lors de la compilation, il faut vérifier sur Mars la sortie des fichiers assembleurs\n")
+                print("Il n'y a pas eu d'erreur dans le repertoire "+directory+" lors de la compilation, il faut vérifier sur Mars la sortie des fichiers assembleurs\n"+Style.RESET_ALL)
             else:
-                print("Il n'y a pas eu d'erreur dans le repertoire "+directory+", ce qui n'est pas normal je crois ...\n")
-        elif(cpt < len(os.listdir(directory))):
-            print("Il y a eu moins d'erreurs que prévu dans le repertoire "+directory)
+                print(Back.RED+"Il n'y a pas eu d'erreur dans le repertoire "+directory+", ce qui n'est pas normal je crois ...\n"+Style.RESET_ALL)
+        elif cpt < len(os.listdir(directory)):
+            print(Back.RED+"Il y a eu moins d'erreurs que prévu dans le repertoire "+directory+Style.RESET_ALL)
             print("")
         else:
             if flagSyn:
-                print("Il n'y a pas eu que des erreurs de syntaxe lors des tests dans "+directory)
+                print(Back.RED+"Il n'y a pas eu que des erreurs de syntaxe lors des tests dans "+directory+Style.RESET_ALL)
                 print(str(errTemp).split("'")[1])
                 print("")
             else:
-                print("Les tests ont été correctement passés dans le repertoire "+directory)
+                print(Back.GREEN+"Les tests ont été correctement passés dans le repertoire "+directory+Style.RESET_ALL)
                 print("")
 
 def removeGarbage():
